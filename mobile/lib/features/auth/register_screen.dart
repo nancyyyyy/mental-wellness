@@ -3,7 +3,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:go_router/go_router.dart';
 import '../../core/auth_service.dart';
-import '../../core/google_sign_in_service.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -73,33 +72,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
-  Future<void> _signInWithGoogle() async {
-    setState(() {
-      _isLoading = true;
-      _error = '';
-    });
-
-    try {
-      final result = await GoogleSignInService.signInWithGoogle();
-
-      if (result != null) {
-        context.go('/chat', extra: {'userId': result['user_id']});
-      } else {
-        setState(() {
-          _error = 'Google Sign-In failed. Please try again.';
-        });
-      }
-    } catch (e) {
-      setState(() {
-        _error = 'Google Sign-In error: $e';
-      });
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
-
   Future<void> _resendVerification() async {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Verification email resent!')),
@@ -116,7 +88,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.mark_email_unread_outlined, size: 80, color: Colors.teal),
+              const Icon(Icons.mark_email_unread_outlined,
+                  size: 80, color: Colors.teal),
               const SizedBox(height: 24),
               const Text(
                 'Check your inbox',
@@ -167,7 +140,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             const SizedBox(height: 24),
             if (_error.isNotEmpty)
-              Text(_error, style: const TextStyle(color: Colors.red));
+              Text(_error, style: const TextStyle(color: Colors.red)),
             ElevatedButton(
               onPressed: _isLoading ? null : _register,
               style: ElevatedButton.styleFrom(
@@ -181,7 +154,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
             const Text('or'),
             const SizedBox(height: 16),
             OutlinedButton.icon(
-              onPressed: _isLoading ? null : _signInWithGoogle,
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                      content: Text('Google Sign-In will be added soon')),
+                );
+              },
               icon: const Icon(Icons.g_mobiledata),
               label: const Text('Continue with Google'),
               style: OutlinedButton.styleFrom(
