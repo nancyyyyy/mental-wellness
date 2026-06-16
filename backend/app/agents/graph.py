@@ -49,11 +49,8 @@ def risk_detection(state: AgentState) -> AgentState:
     return state
 
 def memory_retrieval(state: AgentState) -> AgentState:
-    memories = memory_service.retrieve_relevant_memories(
-        state["user_id"], 
-        limit=6
-    )
-    state["retrieved_memories"] = memories
+    # Temporarily disabled to avoid DB errors
+    state["retrieved_memories"] = []
     return state
 
 def knowledge_retrieval(state: AgentState) -> AgentState:
@@ -61,13 +58,8 @@ def knowledge_retrieval(state: AgentState) -> AgentState:
         knowledge = knowledge_service.retrieve(
             query=state["user_input"],
             category="emotional_wellness",
-            limit=5
+            limit=4
         )
-        if not knowledge:
-            knowledge = knowledge_service.retrieve(
-                query=state["user_input"],
-                limit=5
-            )
         state["retrieved_knowledge"] = knowledge
     except Exception as e:
         print(f"Knowledge retrieval error: {e}")
@@ -77,74 +69,31 @@ def knowledge_retrieval(state: AgentState) -> AgentState:
 def response_generation(state: AgentState) -> AgentState:
     memory_context = ""
     if state.get("retrieved_memories"):
-        memory_context = "\n\nRelevant things I remember about you:\n"
-        for mem in state["retrieved_memories"][-4:]:
+        memory_context = "\n\nRelevant things I remember:\n"
+        for mem in state["retrieved_memories"][-3:]:
             memory_context += f"- {mem.get('text', '')}\n"
 
     knowledge_context = ""
     if state.get("retrieved_knowledge"):
-        knowledge_context = "\n\nRelevant practices and techniques from evidence-based resources:\n"
+        knowledge_context = "\n\nRelevant techniques:\n"
         for item in state["retrieved_knowledge"]:
             title = item.get("title", "")
             explanation = item.get("detailed_explanation", "")
-            steps = item.get("step_by_step_exercise", [])
-            
-            knowledge_context += f"\n**{title}**\n"
-            knowledge_context += f"{explanation}\n"
-            if steps:
-                knowledge_context += "Steps: " + " | ".join(steps[:3]) + "\n"
+            knowledge_context += f"\n**{title}**\n{explanation}\n"
 
-    prompt = f"""You are a warm, calm, and emotionally intelligent companion.
+    prompt = f"""You are a warm and supportive AI companion.
 
 {memory_context}
 {knowledge_context}
 
 User said: {state['user_input']}
 
-RESPONSE FRAMEWORK:
-
-1. Brief Acknowledgement (1 sentence)
-   - Acknowledge what they shared naturally.
-
-2. Insight (Optional but helpful)
-   - Gently explain what may be happening, using knowledge when relevant.
-
-3. Practices & Healing Guidance (When user shows distress, recurring patterns, or asks for help)
-   - Recommend **at most 1 practice** from the knowledge above.
-   - Use this exact format:
-
-     **Practice:** [Name of the practice]
-     **Why It May Help:** [Brief explanation tied to their situation]
-     **Steps:**
-     1. ...
-     2. ...
-     **Duration:** [e.g., 3-5 minutes]
-     **Expected Benefit:** [What they might experience]
-     **Reflection:** [One gentle question]
-
-   - Only recommend practices that exist in the "Relevant practices and techniques" section.
-   - Prioritize quality and relevance over quantity.
-   - Keep instructions simple and beginner-friendly.
-
-4. Follow-up Question
-   - Ask one thoughtful question (about triggers, patterns, needs, or how they feel about trying a practice).
-
-Rules:
-- Keep the overall response concise and readable.
-- Sound supportive and non-clinical.
-- Never overwhelm the user with too many suggestions.
+Respond empathetically and helpfully. Keep it short and natural.
 
 Response:"""
     
     response = llm.invoke(prompt)
     state["response"] = response.content
-    
-    memory_service.extract_and_store_memories(
-        state["user_id"], 
-        state["user_input"], 
-        state["response"]
-    )
-    
     return state
 
 # Build the graph
