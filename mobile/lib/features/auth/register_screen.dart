@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:go_router/go_router.dart';
 import '../../core/auth_service.dart';
+import '../../core/google_sign_in_service.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -64,6 +65,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
     } catch (e) {
       setState(() {
         _error = 'Connection error. Is the backend running?';
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _signInWithGoogle() async {
+    setState(() {
+      _isLoading = true;
+      _error = '';
+    });
+
+    try {
+      final result = await GoogleSignInService.signInWithGoogle();
+
+      if (result != null) {
+        context.go('/chat', extra: {'userId': result['user_id']});
+      } else {
+        setState(() {
+          _error = 'Google Sign-In failed. Please try again.';
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _error = 'Google Sign-In error: $e';
       });
     } finally {
       setState(() {
@@ -153,11 +181,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             const Text('or'),
             const SizedBox(height: 16),
             OutlinedButton.icon(
-              onPressed: () async {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Google Sign-In integration ready in backend')),
-                );
-              },
+              onPressed: _isLoading ? null : _signInWithGoogle,
               icon: const Icon(Icons.g_mobiledata),
               label: const Text('Continue with Google'),
               style: OutlinedButton.styleFrom(
