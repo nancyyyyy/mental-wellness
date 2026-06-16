@@ -17,6 +17,22 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isLoading = false;
   String _error = '';
 
+  @override
+  void initState() {
+    super.initState();
+    _checkAutoLogin();
+  }
+
+  Future<void> _checkAutoLogin() async {
+    final isLoggedIn = await AuthService.isLoggedIn();
+    if (isLoggedIn) {
+      final userId = await AuthService.getUserId();
+      if (mounted) {
+        context.go('/chat', extra: {'userId': userId});
+      }
+    }
+  }
+
   Future<void> _login() async {
     setState(() {
       _isLoading = true;
@@ -50,7 +66,9 @@ class _LoginScreenState extends State<LoginScreen> {
           await AuthService.saveToken(token, userId);
         }
 
-        context.go('/chat', extra: {'userId': userId});
+        if (mounted) {
+          context.go('/chat', extra: {'userId': userId});
+        }
       } else {
         setState(() {
           _error = jsonDecode(response.body)['detail'] ?? 'Login failed';
@@ -61,9 +79,11 @@ class _LoginScreenState extends State<LoginScreen> {
         _error = 'Connection error. Is backend running?';
       });
     } finally {
-      setState(() {
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
