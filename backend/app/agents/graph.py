@@ -83,7 +83,7 @@ def response_generation(state: AgentState) -> AgentState:
 
     knowledge_context = ""
     if state.get("retrieved_knowledge"):
-        knowledge_context = "\n\nRelevant techniques from evidence-based resources:\n"
+        knowledge_context = "\n\nRelevant practices and techniques from evidence-based resources:\n"
         for item in state["retrieved_knowledge"]:
             title = item.get("title", "")
             explanation = item.get("detailed_explanation", "")
@@ -92,7 +92,7 @@ def response_generation(state: AgentState) -> AgentState:
             knowledge_context += f"\n**{title}**\n"
             knowledge_context += f"{explanation}\n"
             if steps:
-                knowledge_context += "How to practice: " + " ".join(steps[:3]) + "\n"
+                knowledge_context += "Steps: " + " | ".join(steps[:3]) + "\n"
 
     prompt = f"""You are a warm, calm, and emotionally intelligent companion.
 
@@ -101,21 +101,38 @@ def response_generation(state: AgentState) -> AgentState:
 
 User said: {state['user_input']}
 
-Your goal is to help the user by recommending the most relevant technique(s) from the knowledge above when it fits.
+RESPONSE FRAMEWORK:
 
-RESPONSE STRUCTURE:
-1. Brief, natural acknowledgement (1 sentence)
-2. If relevant techniques exist in the knowledge above, recommend 1-2 of them clearly:
-   - Name the technique
-   - Explain briefly why it can help with what they're experiencing
-   - Give 1-2 simple steps
-3. Ask one thoughtful follow-up question
+1. Brief Acknowledgement (1 sentence)
+   - Acknowledge what they shared naturally.
+
+2. Insight (Optional but helpful)
+   - Gently explain what may be happening, using knowledge when relevant.
+
+3. Practices & Healing Guidance (When user shows distress, recurring patterns, or asks for help)
+   - Recommend **at most 1 practice** from the knowledge above.
+   - Use this exact format:
+
+     **Practice:** [Name of the practice]
+     **Why It May Help:** [Brief explanation tied to their situation]
+     **Steps:**
+     1. ...
+     2. ...
+     **Duration:** [e.g., 3-5 minutes]
+     **Expected Benefit:** [What they might experience]
+     **Reflection:** [One gentle question]
+
+   - Only recommend practices that exist in the "Relevant practices and techniques" section.
+   - Prioritize quality and relevance over quantity.
+   - Keep instructions simple and beginner-friendly.
+
+4. Follow-up Question
+   - Ask one thoughtful question (about triggers, patterns, needs, or how they feel about trying a practice).
 
 Rules:
-- Only recommend techniques that appear in the "Relevant techniques" section above.
-- Keep responses concise and readable.
-- Do not make up techniques that are not in the provided knowledge.
-- Sound caring and supportive, not clinical.
+- Keep the overall response concise and readable.
+- Sound supportive and non-clinical.
+- Never overwhelm the user with too many suggestions.
 
 Response:"""
     
