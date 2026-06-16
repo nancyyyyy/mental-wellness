@@ -139,7 +139,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             const SizedBox(height: 24),
             if (_error.isNotEmpty)
-              Text(_error, style: const TextStyle(color: Colors.red)),
+              Text(_error, style: const TextStyle(color: Colors.red));
             ElevatedButton(
               onPressed: _isLoading ? null : _register,
               style: ElevatedButton.styleFrom(
@@ -153,26 +153,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
             const Text('or'),
             const SizedBox(height: 16),
             OutlinedButton.icon(
-              onPressed: () {
+              onPressed: () async {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Google Sign-In coming soon')),
+                  const SnackBar(content: Text('Google Sign-In integration ready in backend')),
                 );
               },
               icon: const Icon(Icons.g_mobiledata),
               label: const Text('Continue with Google'),
-              style: OutlinedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 50),
-              ),
-            ),
-            const SizedBox(height: 12),
-            OutlinedButton.icon(
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Sign in with Apple coming soon')),
-                );
-              },
-              icon: const Icon(Icons.apple),
-              label: const Text('Continue with Apple'),
               style: OutlinedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 50),
               ),
