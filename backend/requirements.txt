@@ -1,0 +1,16 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+alembic
+psycopg2-binary
+redis
+qdrant-client
+langchain
+langgraph
+langchain-openai
+python-jose[cryptography]
+passlib[bcrypt]
+python-multipart
+pydantic-settings
+python-dotenv
+httpx
