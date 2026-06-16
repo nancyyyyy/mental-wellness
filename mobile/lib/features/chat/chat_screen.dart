@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -64,6 +65,15 @@ class _ChatScreenState extends State<ChatScreen> {
       appBar: AppBar(
         title: const Text('Mind Companion'),
         backgroundColor: Colors.teal,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.mic),
+            tooltip: 'Voice Chat',
+            onPressed: () {
+              context.go('/voice');
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
