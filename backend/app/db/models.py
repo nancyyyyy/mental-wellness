@@ -14,7 +14,6 @@ class User(Base):
     is_verified = Column(Boolean, default=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
-    memories = relationship("Memory", back_populates="user")
     conversations = relationship("Conversation", back_populates="user")
 
 
@@ -22,12 +21,13 @@ class Memory(Base):
     __tablename__ = "memories"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(String, nullable=False)   # Changed to String to support "demo-user" or JWT sub
+    user_id = Column(String, nullable=False)   # Using String to support "demo-user" or JWT sub
     memory_text = Column(Text, nullable=False)
     memory_type = Column(String, default="general")
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
-    user = relationship("User", back_populates="memories")
+    # Relationship removed temporarily to avoid join errors
+    # user = relationship("User", back_populates="memories")
 
 
 class Conversation(Base):
