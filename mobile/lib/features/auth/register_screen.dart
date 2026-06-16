@@ -3,20 +3,21 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:go_router/go_router.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _nameController = TextEditingController();
   bool _isLoading = false;
   String _error = '';
 
-  Future<void> _login() async {
+  Future<void> _register() async {
     setState(() {
       _isLoading = true;
       _error = '';
@@ -24,11 +25,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://localhost:8000/auth/login'),
+        Uri.parse('http://localhost:8000/auth/register'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           "email": _emailController.text.trim(),
           "password": _passwordController.text,
+          "full_name": _nameController.text.trim(),
         }),
       );
 
@@ -38,12 +40,12 @@ class _LoginScreenState extends State<LoginScreen> {
         context.go('/chat');
       } else {
         setState(() {
-          _error = jsonDecode(response.body)['detail'] ?? 'Login failed';
+          _error = jsonDecode(response.body)['detail'] ?? 'Registration failed';
         });
       }
     } catch (e) {
       setState(() {
-        _error = 'Connection error';
+        _error = 'Connection error. Is the backend running?';
       });
     } finally {
       setState(() {
@@ -55,14 +57,20 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
+      appBar: AppBar(title: const Text('Create Account')),
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
             TextField(
+              controller: _nameController,
+              decoration: const InputDecoration(labelText: 'Full Name'),
+            ),
+            const SizedBox(height: 16),
+            TextField(
               controller: _emailController,
               decoration: const InputDecoration(labelText: 'Email'),
+              keyboardType: TextInputType.emailAddress,
             ),
             const SizedBox(height: 16),
             TextField(
@@ -74,14 +82,14 @@ class _LoginScreenState extends State<LoginScreen> {
             if (_error.isNotEmpty)
               Text(_error, style: const TextStyle(color: Colors.red)),
             ElevatedButton(
-              onPressed: _isLoading ? null : _login,
+              onPressed: _isLoading ? null : _register,
               child: _isLoading
                   ? const CircularProgressIndicator()
-                  : const Text('Login'),
+                  : const Text('Register'),
             ),
             TextButton(
-              onPressed: () => context.go('/register'),
-              child: const Text("Don't have an account? Register"),
+              onPressed: () => context.go('/login'),
+              child: const Text('Already have an account? Login'),
             ),
           ],
         ),
