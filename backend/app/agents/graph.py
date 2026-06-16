@@ -4,6 +4,7 @@ from langchain_openai import ChatOpenAI
 from langchain_groq import ChatGroq
 from ..core.config import settings
 from ..services.memory_service import MemoryService
+from ..services.knowledge_service import KnowledgeService
 
 class AgentState(TypedDict):
     user_input: str
@@ -37,6 +38,7 @@ else:
     )
 
 memory_service = MemoryService()
+knowledge_service = KnowledgeService()
 
 def emotion_analysis(state: AgentState) -> AgentState:
     state["emotion"] = {"emotion": "neutral", "intensity": 5, "confidence": 0.8}
@@ -56,30 +58,57 @@ def memory_retrieval(state: AgentState) -> AgentState:
     return state
 
 def knowledge_retrieval(state: AgentState) -> AgentState:
-    state["retrieved_knowledge"] = []
+    """Retrieve relevant knowledge from the structured knowledge base"""
+    try:
+        # For now, search in emotional_wellness collection
+        # Later we can make this dynamic based on topic classification
+        knowledge = knowledge_service.retrieve(
+            query=state["user_input"],
+            category="emotional_wellness",
+            limit=4
+        )
+        state["retrieved_knowledge"] = knowledge
+    except Exception as e:
+        print(f"Knowledge retrieval error: {e}")
+        state["retrieved_knowledge"] = []
     return state
 
 def response_generation(state: AgentState) -> AgentState:
     # Build memory context
     memory_context = ""
     if state.get("retrieved_memories"):
-        memory_context = "\n\nThings I remember:\n"
+        memory_context = "\n\nThings I remember about you:\n"
         for mem in state["retrieved_memories"][-3:]:
             memory_context += f"- {mem.get('text', '')}\n"
-    
-    prompt = f"""You are a warm, calm, and emotionally present companion. You remember important things about the user and respond naturally.
+
+    # Build knowledge context from structured knowledge base
+    knowledge_context = ""
+    if state.get("retrieved_knowledge"):
+        knowledge_context = "\n\nRelevant knowledge from wellness resources:\n"
+        for item in state["retrieved_knowledge"]:
+            title = item.get("title", "")
+            explanation = item.get("detailed_explanation", "")
+            exercise = item.get("step_by_step_exercise", [])
+            
+            knowledge_context += f"\n**{title}**\n"
+            knowledge_context += f"{explanation}\n"
+            if exercise:
+                knowledge_context += "Helpful steps: " + " | ".join(exercise[:2]) + "\n"
+
+    prompt = f"""You are a warm, calm, and emotionally present companion. You remember important things about the user and respond naturally, using evidence-based wellness knowledge when helpful.
 
 {memory_context}
+{knowledge_context}
 
 User said: {state['user_input']}
 
 Rules:
 - Keep responses relatively short and easy to read (2-4 sentences max).
-- Do NOT make assumptions about how the user is feeling unless they have clearly said so.
-- Be genuine and conversational — avoid sounding like a therapist.
-- If you have relevant memories, mention them naturally only if it adds value.
-- Validate what they shared without over-explaining.
-- Ask one thoughtful question if it feels right.
+- Use the provided knowledge naturally when it fits — don't force it.
+- Do NOT make assumptions about how the user is feeling unless they clearly said so.
+- Be genuine and conversational.
+- Validate what they shared.
+- Ask one thoughtful follow-up question if appropriate.
 
 Response:"""
     
