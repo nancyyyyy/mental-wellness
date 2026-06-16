@@ -1,0 +1,20 @@
+[
+  {
+    "id": "kb_cbt_001",
+    "category": "Cognitive Behavioral Therapy (CBT)",
+    "sub_category": "Cognitive distortions",
+    "title": "All-or-Nothing Thinking",
+    "summary": "Viewing situations in extreme black-and-white terms.",
+    "detailed_explanation": "This cognitive distortion leads to seeing things as complete success or total failure.",
+    "when_to_use": "When you catch yourself using words like 'always' or 'never'.",
+    "when_not_to_use": "During acute crisis.",
+    "step_by_step_exercise": ["Identify the thought", "Find middle ground", "Reframe"],
+    "reflection_questions": ["What would a friend say?"],
+    "common_mistakes": ["Ignoring nuance"],
+    "example_scenario": "One mistake = total failure.",
+    "recommended_followup_topics": ["Thought Records"],
+    "keywords": ["all or nothing", "cbt"],
+    "risk_level": "Low",
+    "source_type": "Evidence-based"
+  }
+]
