@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:go_router/go_router.dart';
+import '../../core/auth_service.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -36,8 +37,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        print("Token: ${data['access_token']}");
-        context.go('/chat');
+        final token = data['access_token'];
+
+        final parts = token.split('.');
+        String? userId;
+        if (parts.length == 3) {
+          final payload = jsonDecode(
+            utf8.decode(base64Url.decode(base64Url.normalize(parts[1]))),
+          );
+          userId = payload['sub'];
+        }
+
+        if (userId != null) {
+          await AuthService.saveToken(token, userId);
+        }
+
+        context.go('/chat', extra: {'userId': userId});
       } else {
         setState(() {
           _error = jsonDecode(response.body)['detail'] ?? 'Registration failed';
@@ -45,7 +60,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       }
     } catch (e) {
       setState(() {
-        _error = 'Connection error. Is the backend running?';
+        _error = 'Connection error. Is backend running?';
       });
     } finally {
       setState(() {

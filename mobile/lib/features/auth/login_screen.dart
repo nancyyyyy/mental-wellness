@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:go_router/go_router.dart';
+import '../../core/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -37,13 +38,19 @@ class _LoginScreenState extends State<LoginScreen> {
         final token = data['access_token'];
 
         final parts = token.split('.');
+        String? userId;
         if (parts.length == 3) {
           final payload = jsonDecode(
             utf8.decode(base64Url.decode(base64Url.normalize(parts[1]))),
           );
-          final userId = payload['sub'];
-          context.go('/chat', extra: {'userId': userId});
+          userId = payload['sub'];
         }
+
+        if (userId != null) {
+          await AuthService.saveToken(token, userId);
+        }
+
+        context.go('/chat', extra: {'userId': userId});
       } else {
         setState(() {
           _error = jsonDecode(response.body)['detail'] ?? 'Login failed';
