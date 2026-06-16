@@ -12,7 +12,6 @@ from app.db.models import User
 router = APIRouter()
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-# ==================== SCHEMAS ====================
 class UserCreate(BaseModel):
     email: str
     password: str
@@ -29,7 +28,7 @@ class Token(BaseModel):
 class MessageResponse(BaseModel):
     message: str
 
-# ==================== HELPERS ====================
+
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
@@ -44,7 +43,6 @@ def create_access_token(data: dict) -> str:
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
-# ==================== ROUTES ====================
 
 @router.post("/register", response_model=Token, status_code=status.HTTP_201_CREATED)
 def register(user: UserCreate, db: Session = Depends(get_db)):
