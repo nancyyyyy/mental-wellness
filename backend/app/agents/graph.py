@@ -49,8 +49,11 @@ def risk_detection(state: AgentState) -> AgentState:
     return state
 
 def memory_retrieval(state: AgentState) -> AgentState:
-    # Temporarily disabled to avoid DB type errors with "demo-user"
-    state["retrieved_memories"] = []
+    memories = memory_service.retrieve_relevant_memories(
+        state["user_id"], 
+        limit=6
+    )
+    state["retrieved_memories"] = memories
     return state
 
 def knowledge_retrieval(state: AgentState) -> AgentState:
@@ -108,18 +111,26 @@ Response:"""
     
     response = llm.invoke(prompt)
     state["response"] = response.content
+    
+    # Store new memory
+    memory_service.extract_and_store_memories(
+        state["user_id"], 
+        state["user_input"], 
+        state["response"]
+    )
+    
     return state
 
 # Build the graph
 workflow = StateGraph(AgentState)
-workflow.add_node("emotion", emotion_analysis)
+workflow.add_node("detect_emotion", emotion_analysis)
 workflow.add_node("risk", risk_detection)
 workflow.add_node("memory_retrieve", memory_retrieval)
 workflow.add_node("knowledge", knowledge_retrieval)
 workflow.add_node("response", response_generation)
 
-workflow.set_entry_point("emotion")
-workflow.add_edge("emotion", "risk")
+workflow.set_entry_point("detect_emotion")
+workflow.add_edge("detect_emotion", "risk")
 workflow.add_edge("risk", "memory_retrieve")
 workflow.add_edge("memory_retrieve", "knowledge")
 workflow.add_edge("knowledge", "response")
