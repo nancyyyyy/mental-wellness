@@ -27,4 +27,13 @@ class AuthService {
     final token = await getToken();
     return token != null && token.isNotEmpty;
   }
+
+  static Future<Map<String, String?>> getAuthData() async {
+    final token = await getToken();
+    final userId = await getUserId();
+    return {
+      'token': token,
+      'userId': userId,
+    };
+  }
 }
