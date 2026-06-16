@@ -68,39 +68,40 @@ def knowledge_retrieval(state: AgentState) -> AgentState:
 def response_generation(state: AgentState) -> AgentState:
     memory_context = ""
     if state.get("retrieved_memories"):
-        memory_context = "\n\nThings I remember about you:\n"
-        for mem in state["retrieved_memories"][-4:]:
+        memory_context = "\n\nRelevant context from previous conversations:\n"
+        for mem in state["retrieved_memories"][-5:]:
             memory_context += f"- {mem.get('text', '')}\n"
 
     knowledge_context = ""
     if state.get("retrieved_knowledge"):
-        knowledge_context = "\n\nHelpful techniques from wellness resources:\n"
+        knowledge_context = "\n\nRelevant therapeutic knowledge:\n"
         for item in state["retrieved_knowledge"]:
             title = item.get("title", "")
             explanation = item.get("detailed_explanation", "")
             steps = item.get("step_by_step_exercise", [])
             knowledge_context += f"\n**{title}**\n{explanation}\n"
             if steps:
-                knowledge_context += "How to practice: " + " | ".join(steps[:3]) + "\n"
+                knowledge_context += "Practical steps: " + " | ".join(steps[:4]) + "\n"
 
-    prompt = f"""You are a warm, calm, and emotionally intelligent companion.
+    prompt = f"""You are an experienced, emotionally intelligent companion who remembers important details about the user and helps them gain deeper self-understanding over time.
 
 {memory_context}
 {knowledge_context}
 
-User said: {state['user_input']}
+User's message: {state['user_input']}
 
-How to respond:
+Your approach:
+- First, understand what the user is actually experiencing and what emotional need might be underneath this message.
+- Connect the current situation to previous patterns or conversations when relevant (use memory context naturally, without listing facts).
+- Provide meaningful insight when possible — help the user see something they might not have noticed (patterns, triggers, beliefs, or dynamics).
+- When appropriate, draw from the therapeutic knowledge above to explain psychological mechanisms or suggest helpful practices.
+- Keep your tone calm, curious, non-judgmental, and supportive.
+- End with one thoughtful question that helps deepen understanding of their experience, patterns, or needs.
 
-- First, assess whether the user is sharing something emotionally significant or showing signs of distress.
-- If the message is casual or neutral (like "Hi", "How are you", or light conversation), respond warmly and simply. Keep it short and natural. Do not overanalyze or bring in techniques.
-- If the user is sharing emotional difficulty, stress, or mental health related content, then respond more thoughtfully:
-  - Start with a short, genuine acknowledgment.
-  - Gently offer insight if it feels natural (you can use the techniques above when relevant).
-  - If helpful, suggest 1 simple, practical step or technique from the resources.
-  - End with one thoughtful question that helps deepen understanding.
-- Adjust the length of your response based on the situation. Not every message needs a long reply.
-- Never sound robotic or forced. Stay conversational and caring.
+Important:
+- Do not over-explain or give long lectures on simple messages.
+- Do not force techniques if they don't fit naturally.
+- Focus on helping the user feel genuinely understood and gain clarity.
 
 Response:"""
     
