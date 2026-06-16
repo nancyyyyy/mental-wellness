@@ -22,7 +22,7 @@ class Memory(Base):
     __tablename__ = "memories"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user_id = Column(String, nullable=False)   # Changed to String to support "demo-user" or JWT sub
     memory_text = Column(Text, nullable=False)
     memory_type = Column(String, default="general")
     created_at = Column(DateTime(timezone=True), server_default=func.now())

@@ -1,5 +1,4 @@
 from typing import List, Dict
-from sqlalchemy.orm import Session
 from ..db.base import get_db
 from ..db.models import Memory as DBMemory
 
@@ -7,7 +6,7 @@ class MemoryService:
     def __init__(self):
         pass
 
-    def retrieve_relevant_memories(self, user_id: int, limit: int = 8) -> List[Dict]:
+    def retrieve_relevant_memories(self, user_id: str, limit: int = 8) -> List[Dict]:
         """Get recent memories for the user from PostgreSQL"""
         db = next(get_db())
         try:
@@ -30,7 +29,7 @@ class MemoryService:
         finally:
             db.close()
 
-    def add_memory(self, user_id: int, memory_text: str, memory_type: str = "general"):
+    def add_memory(self, user_id: str, memory_text: str, memory_type: str = "general"):
         """Store memory in database"""
         if not memory_text or len(memory_text.strip()) < 10:
             return
@@ -47,7 +46,7 @@ class MemoryService:
         finally:
             db.close()
 
-    def extract_and_store_memories(self, user_id: int, user_input: str, ai_response: str):
+    def extract_and_store_memories(self, user_id: str, user_input: str, ai_response: str):
         """Simple rule-based memory extraction"""
         text = user_input.lower()
 
