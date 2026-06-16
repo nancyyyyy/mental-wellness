@@ -4,7 +4,9 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
+  final String? userId;
+
+  const ChatScreen({super.key, this.userId});
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -16,6 +18,13 @@ class _ChatScreenState extends State<ChatScreen> {
     "Companion: Hello! I'm your Mind Companion. How are you feeling today?"
   ];
   bool _isLoading = false;
+  late String userId;
+
+  @override
+  void initState() {
+    super.initState();
+    userId = widget.userId ?? "demo-user";
+  }
 
   Future<void> _sendMessage() async {
     if (_controller.text.trim().isEmpty) return;
@@ -33,7 +42,7 @@ class _ChatScreenState extends State<ChatScreen> {
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           "content": userMessage,
-          "user_id": "flutter-user-1"
+          "user_id": userId,
         }),
       );
 
@@ -45,12 +54,12 @@ class _ChatScreenState extends State<ChatScreen> {
         });
       } else {
         setState(() {
-          _messages.add("Companion: Sorry, I'm having trouble responding right now.");
+          _messages.add("Companion: Sorry, I'm having trouble responding.");
         });
       }
     } catch (e) {
       setState(() {
-        _messages.add("Companion: Connection error. Is the backend running?");
+        _messages.add("Companion: Connection error. Is backend running?");
       });
     } finally {
       setState(() {
@@ -68,10 +77,7 @@ class _ChatScreenState extends State<ChatScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.mic),
-            tooltip: 'Voice Chat',
-            onPressed: () {
-              context.go('/voice');
-            },
+            onPressed: () => context.go('/voice'),
           ),
         ],
       ),
@@ -93,10 +99,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       color: isUser ? Colors.teal[100] : Colors.grey[200],
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Text(
-                      message,
-                      style: const TextStyle(fontSize: 16),
-                    ),
+                    child: Text(message, style: const TextStyle(fontSize: 16)),
                   ),
                 );
               },
@@ -104,11 +107,11 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
           if (_isLoading)
             const Padding(
-              padding: EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(8),
               child: CircularProgressIndicator(),
             ),
           Padding(
-            padding: const EdgeInsets.all(12.0),
+            padding: const EdgeInsets.all(12),
             child: Row(
               children: [
                 Expanded(

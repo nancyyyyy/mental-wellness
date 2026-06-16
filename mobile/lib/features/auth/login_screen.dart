@@ -34,8 +34,16 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        print("Token: ${data['access_token']}");
-        context.go('/chat');
+        final token = data['access_token'];
+
+        final parts = token.split('.');
+        if (parts.length == 3) {
+          final payload = jsonDecode(
+            utf8.decode(base64Url.decode(base64Url.normalize(parts[1]))),
+          );
+          final userId = payload['sub'];
+          context.go('/chat', extra: {'userId': userId});
+        }
       } else {
         setState(() {
           _error = jsonDecode(response.body)['detail'] ?? 'Login failed';
@@ -43,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     } catch (e) {
       setState(() {
-        _error = 'Connection error';
+        _error = 'Connection error. Is backend running?';
       });
     } finally {
       setState(() {

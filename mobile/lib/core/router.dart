@@ -9,7 +9,14 @@ final appRouter = GoRouter(
   routes: [
     GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
     GoRoute(path: '/register', builder: (context, state) => const RegisterScreen()),
-    GoRoute(path: '/chat', builder: (context, state) => const ChatScreen()),
+    GoRoute(
+      path: '/chat',
+      builder: (context, state) {
+        final extra = state.extra as Map<String, dynamic>?;
+        final userId = extra?['userId'] as String?;
+        return ChatScreen(userId: userId);
+      },
+    ),
     GoRoute(path: '/voice', builder: (context, state) => const VoiceChatScreen()),
   ],
 );
