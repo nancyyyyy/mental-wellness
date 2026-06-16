@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .routers import auth, chat, practices
 
-app = FastAPI(title="Mind Companion API")
+app = FastAPI(title="Mind Companion API", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -17,9 +17,9 @@ app.include_router(chat.router, prefix="/chat", tags=["Chat"])
 app.include_router(practices.router, prefix="/practices", tags=["Practices"])
 
 @app.get("/")
-def root():
-    return {"message": "Mind Companion API is running"}
+async def root():
+    return {"message": "Mind Companion Backend Running"}
 
 @app.get("/health")
-def health():
-    return {"status": "healthy"}
+async def health():
+    return {"status": "ok"}
