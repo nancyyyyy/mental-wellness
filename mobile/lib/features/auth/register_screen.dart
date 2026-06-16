@@ -94,7 +94,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             const SizedBox(height: 24),
             if (_error.isNotEmpty)
-              Text(_error, style: const TextStyle(color: Colors.red));
+              Text(_error, style: const TextStyle(color: Colors.red)),
             ElevatedButton(
               onPressed: _isLoading ? null : _register,
               style: ElevatedButton.styleFrom(

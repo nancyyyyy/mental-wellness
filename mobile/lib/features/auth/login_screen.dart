@@ -37,7 +37,6 @@ class _LoginScreenState extends State<LoginScreen> {
         final data = jsonDecode(response.body);
         final token = data['access_token'];
 
-        // Decode JWT to get user_id
         final parts = token.split('.');
         String? userId;
         if (parts.length == 3) {
@@ -88,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             const SizedBox(height: 24),
             if (_error.isNotEmpty)
-              Text(_error, style: const TextStyle(color: Colors.red));
+              Text(_error, style: const TextStyle(color: Colors.red)),
             ElevatedButton(
               onPressed: _isLoading ? null : _login,
               style: ElevatedButton.styleFrom(
