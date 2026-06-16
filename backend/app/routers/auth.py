@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 from jose import jwt
 from datetime import datetime, timedelta
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 
 from app.core.config import settings
 from app.db.base import get_db
@@ -14,12 +14,12 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # ==================== SCHEMAS ====================
 class UserCreate(BaseModel):
-    email: EmailStr
+    email: str
     password: str
     full_name: str = None
 
 class UserLogin(BaseModel):
-    email: EmailStr
+    email: str
     password: str
 
 class Token(BaseModel):
@@ -46,7 +46,6 @@ def create_access_token(data: dict) -> str:
 
 @router.post("/register", response_model=Token, status_code=status.HTTP_201_CREATED)
 def register(user: UserCreate, db: Session = Depends(get_db)):
-    # Check if user already exists
     existing_user = db.query(User).filter(User.email == user.email).first()
     if existing_user:
         raise HTTPException(
@@ -54,7 +53,6 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
             detail="Account already exists with this email"
         )
 
-    # Create new user
     hashed_password = get_password_hash(user.password)
     new_user = User(
         email=user.email,
@@ -66,7 +64,6 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_user)
 
-    # Generate JWT
     access_token = create_access_token({"sub": str(new_user.id)})
     return {"access_token": access_token}
 
