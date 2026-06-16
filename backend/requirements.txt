@@ -8,6 +8,7 @@ qdrant-client
 langchain
 langgraph
 langchain-openai
+langchain-groq
 python-jose[cryptography]
 passlib[bcrypt]
 python-multipart
