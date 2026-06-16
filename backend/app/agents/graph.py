@@ -49,7 +49,6 @@ def risk_detection(state: AgentState) -> AgentState:
     return state
 
 def memory_retrieval(state: AgentState) -> AgentState:
-    # Temporarily disabled to avoid DB errors
     state["retrieved_memories"] = []
     return state
 
@@ -58,7 +57,7 @@ def knowledge_retrieval(state: AgentState) -> AgentState:
         knowledge = knowledge_service.retrieve(
             query=state["user_input"],
             category="emotional_wellness",
-            limit=4
+            limit=5
         )
         state["retrieved_knowledge"] = knowledge
     except Exception as e:
@@ -69,26 +68,55 @@ def knowledge_retrieval(state: AgentState) -> AgentState:
 def response_generation(state: AgentState) -> AgentState:
     memory_context = ""
     if state.get("retrieved_memories"):
-        memory_context = "\n\nRelevant things I remember:\n"
-        for mem in state["retrieved_memories"][-3:]:
+        memory_context = "\n\nRelevant memories about the user:\n"
+        for mem in state["retrieved_memories"][-4:]:
             memory_context += f"- {mem.get('text', '')}\n"
 
     knowledge_context = ""
     if state.get("retrieved_knowledge"):
-        knowledge_context = "\n\nRelevant techniques:\n"
+        knowledge_context = "\n\nAvailable evidence-based techniques:\n"
         for item in state["retrieved_knowledge"]:
             title = item.get("title", "")
             explanation = item.get("detailed_explanation", "")
-            knowledge_context += f"\n**{title}**\n{explanation}\n"
+            steps = item.get("step_by_step_exercise", [])
+            knowledge_context += f"\n**{title}**\n"
+            knowledge_context += f"{explanation}\n"
+            if steps:
+                knowledge_context += "Steps: " + " | ".join(steps[:4]) + "\n"
 
-    prompt = f"""You are a warm and supportive AI companion.
+    prompt = f"""You are a warm, calm, and emotionally intelligent companion. 
+Follow this response structure **strictly**:
+
+STEP 1: BRIEF ACKNOWLEDGEMENT
+- Maximum 1-3 sentences.
+- Acknowledge what the user shared naturally.
+- Do not over-validate or sound overly sympathetic.
+
+STEP 2: EXPLAIN WHAT MAY BE HAPPENING
+- Use the retrieved knowledge and memory context.
+- Explain possible psychological or emotional mechanisms.
+- Help the user gain insight.
+
+STEP 3: IMPACT EXPLANATION
+- Briefly explain how this may be affecting the user emotionally, mentally, or in daily life.
+
+STEP 4: IMPROVEMENT STRATEGY
+- Recommend 1-2 most relevant practices from the "Available evidence-based techniques" above.
+- For each practice include:
+  - Practice name
+  - Why it helps (in context of user's situation)
+  - Simple how-to steps
+- Focus on practical, doable actions. Never guarantee results.
+
+STEP 5: THERAPEUTIC FOLLOW-UP QUESTION
+- Ask only 1 high-quality question.
+- Prioritize: Emotional state → Triggers → Patterns → Needs → Beliefs.
+- Make it natural and relevant.
 
 {memory_context}
 {knowledge_context}
 
 User said: {state['user_input']}
-
-Respond empathetically and helpfully. Keep it short and natural.
 
 Response:"""
     
