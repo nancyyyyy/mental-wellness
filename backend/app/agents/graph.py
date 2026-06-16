@@ -51,8 +51,7 @@ def risk_detection(state: AgentState) -> AgentState:
 def memory_retrieval(state: AgentState) -> AgentState:
     memories = memory_service.retrieve_relevant_memories(
         state["user_id"], 
-        state["user_input"],
-        limit=5
+        limit=6
     )
     state["retrieved_memories"] = memories
     return state
@@ -62,8 +61,13 @@ def knowledge_retrieval(state: AgentState) -> AgentState:
         knowledge = knowledge_service.retrieve(
             query=state["user_input"],
             category="emotional_wellness",
-            limit=4
+            limit=5
         )
+        if not knowledge:
+            knowledge = knowledge_service.retrieve(
+                query=state["user_input"],
+                limit=5
+            )
         state["retrieved_knowledge"] = knowledge
     except Exception as e:
         print(f"Knowledge retrieval error: {e}")
@@ -71,76 +75,53 @@ def knowledge_retrieval(state: AgentState) -> AgentState:
     return state
 
 def response_generation(state: AgentState) -> AgentState:
-    # Build memory context
     memory_context = ""
     if state.get("retrieved_memories"):
-        memory_context = "\n\nRelevant memories:\n"
-        for mem in state["retrieved_memories"][-3:]:
+        memory_context = "\n\nRelevant things I remember about you:\n"
+        for mem in state["retrieved_memories"][-4:]:
             memory_context += f"- {mem.get('text', '')}\n"
 
-    # Build knowledge context
     knowledge_context = ""
     if state.get("retrieved_knowledge"):
-        knowledge_context = "\n\nAvailable wellness knowledge:\n"
+        knowledge_context = "\n\nRelevant techniques from evidence-based resources:\n"
         for item in state["retrieved_knowledge"]:
             title = item.get("title", "")
             explanation = item.get("detailed_explanation", "")
-            exercise = item.get("step_by_step_exercise", [])
+            steps = item.get("step_by_step_exercise", [])
             
-            knowledge_context += f"\n**{title}**\n{explanation}\n"
-            if exercise:
-                knowledge_context += "Helpful steps: " + " | ".join(exercise[:3]) + "\n"
+            knowledge_context += f"\n**{title}**\n"
+            knowledge_context += f"{explanation}\n"
+            if steps:
+                knowledge_context += "How to practice: " + " ".join(steps[:3]) + "\n"
 
-    prompt = f"""You are a warm, calm, and emotionally intelligent companion. Follow this exact response framework.
+    prompt = f"""You are a warm, calm, and emotionally intelligent companion.
 
 {memory_context}
 {knowledge_context}
 
 User said: {state['user_input']}
 
-RESPONSE FRAMEWORK (Follow strictly):
+Your goal is to help the user by recommending the most relevant technique(s) from the knowledge above when it fits.
 
-STEP 1: BRIEF ACKNOWLEDGEMENT
-- 1-2 sentences maximum.
-- Acknowledge what the user shared naturally.
-- Do not over-validate or sound overly sympathetic.
+RESPONSE STRUCTURE:
+1. Brief, natural acknowledgement (1 sentence)
+2. If relevant techniques exist in the knowledge above, recommend 1-2 of them clearly:
+   - Name the technique
+   - Explain briefly why it can help with what they're experiencing
+   - Give 1-2 simple steps
+3. Ask one thoughtful follow-up question
 
-STEP 2: EXPLAIN WHAT MAY BE HAPPENING
-- Use the retrieved knowledge and memory.
-- Explain possible psychological or emotional mechanisms.
-- Help the user gain insight into why this is happening.
-- Keep it clear and non-clinical.
-
-STEP 3: IMPACT EXPLANATION
-- Briefly explain how this may be affecting the user emotionally, mentally, or in daily life.
-- Connect cause and effect.
-
-STEP 4: IMPROVEMENT STRATEGY
-- Recommend 1-2 most relevant practices from the knowledge base.
-- For each practice include:
-  - Practice name
-  - Why it helps
-  - Simple how-to steps
-- Focus on practical, doable actions.
-
-STEP 5: THERAPEUTIC FOLLOW-UP QUESTION
-- Ask only 1 high-quality question.
-- Prioritize: Emotional state → Triggers → Patterns → Needs → Beliefs.
-- Make it natural and relevant to what was shared.
-- Do not ask generic questions.
-
-Overall Rules:
-- Keep the entire response concise and readable.
-- Use knowledge naturally, not forced.
-- Do not make assumptions about feelings.
-- Sound like a caring companion, not a therapist.
+Rules:
+- Only recommend techniques that appear in the "Relevant techniques" section above.
+- Keep responses concise and readable.
+- Do not make up techniques that are not in the provided knowledge.
+- Sound caring and supportive, not clinical.
 
 Response:"""
     
     response = llm.invoke(prompt)
     state["response"] = response.content
     
-    # Store new memory
     memory_service.extract_and_store_memories(
         state["user_id"], 
         state["user_input"], 
