@@ -58,10 +58,7 @@ def memory_retrieval(state: AgentState) -> AgentState:
     return state
 
 def knowledge_retrieval(state: AgentState) -> AgentState:
-    """Retrieve relevant knowledge from the structured knowledge base"""
     try:
-        # For now, search in emotional_wellness collection
-        # Later we can make this dynamic based on topic classification
         knowledge = knowledge_service.retrieve(
             query=state["user_input"],
             category="emotional_wellness",
@@ -81,7 +78,7 @@ def response_generation(state: AgentState) -> AgentState:
         for mem in state["retrieved_memories"][-3:]:
             memory_context += f"- {mem.get('text', '')}\n"
 
-    # Build knowledge context from structured knowledge base
+    # Build knowledge context
     knowledge_context = ""
     if state.get("retrieved_knowledge"):
         knowledge_context = "\n\nRelevant knowledge from wellness resources:\n"
@@ -102,13 +99,25 @@ def response_generation(state: AgentState) -> AgentState:
 
 User said: {state['user_input']}
 
-Rules:
-- Keep responses relatively short and easy to read (2-4 sentences max).
-- Use the provided knowledge naturally when it fits — don't force it.
+Core Principles:
+- Keep responses short and readable (2-4 sentences max).
 - Do NOT make assumptions about how the user is feeling unless they clearly said so.
-- Be genuine and conversational.
-- Validate what they shared.
-- Ask one thoughtful follow-up question if appropriate.
+- Be genuine and conversational. Avoid sounding like a therapist.
+
+Follow-up Question Strategy (choose the most useful one):
+Priority order:
+1. Emotional State – What are they feeling right now?
+2. Trigger Identification – What happened just before this feeling?
+3. Pattern Discovery – Is this a recurring pattern?
+4. Core Needs – What do they need most right now?
+5. Beliefs & Self-talk – What are they telling themselves?
+
+Question Rules:
+- Ask at most 1-2 high-quality questions.
+- Choose the single most useful question based on context and memory.
+- Do not ask questions whose answers are already known from memory.
+- Questions should feel natural, not interrogative.
+- Goal: deeper emotional understanding, not just continuing the conversation.
 
 Response:"""
     
