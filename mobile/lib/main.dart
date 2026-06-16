@@ -3,7 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/router.dart';
 
 void main() {
-  runApp(const ProviderScope(child: MindCompanionApp()));
+  runApp(
+    const ProviderScope(
+      child: MindCompanionApp(),
+    ),
+  );
 }
 
 class MindCompanionApp extends StatelessWidget {
@@ -13,8 +17,12 @@ class MindCompanionApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'Mind Companion',
-      theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal), useMaterial3: true),
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
+        useMaterial3: true,
+      ),
       routerConfig: appRouter,
+      debugShowCheckedModeBanner: false,
     );
   }
 }
