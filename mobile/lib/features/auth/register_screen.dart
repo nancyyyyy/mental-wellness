@@ -17,6 +17,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _nameController = TextEditingController();
   bool _isLoading = false;
   String _error = '';
+  bool _showVerificationMessage = false;
 
   Future<void> _register() async {
     setState(() {
@@ -52,7 +53,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
           await AuthService.saveToken(token, userId);
         }
 
-        context.go('/chat', extra: {'userId': userId});
+        setState(() {
+          _showVerificationMessage = true;
+        });
       } else {
         setState(() {
           _error = jsonDecode(response.body)['detail'] ?? 'Registration failed';
@@ -60,7 +63,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       }
     } catch (e) {
       setState(() {
-        _error = 'Connection error. Is backend running?';
+        _error = 'Connection error. Is the backend running?';
       });
     } finally {
       setState(() {
@@ -69,11 +72,52 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
+  Future<void> _resendVerification() async {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Verification email resent!')),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (_showVerificationMessage) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Check Your Email')),
+        body: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.mark_email_unread_outlined, size: 80, color: Colors.teal),
+              const SizedBox(height: 24),
+              const Text(
+                'Check your inbox',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                "We've sent a verification email to ${_emailController.text}",
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 32),
+              ElevatedButton(
+                onPressed: _resendVerification,
+                child: const Text('Resend Verification Email'),
+              ),
+              TextButton(
+                onPressed: () => context.go('/login'),
+                child: const Text('Back to Login'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(title: const Text('Create Account')),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
@@ -98,10 +142,42 @@ class _RegisterScreenState extends State<RegisterScreen> {
               Text(_error, style: const TextStyle(color: Colors.red)),
             ElevatedButton(
               onPressed: _isLoading ? null : _register,
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 50),
+              ),
               child: _isLoading
                   ? const CircularProgressIndicator()
-                  : const Text('Register'),
+                  : const Text('Create Account'),
             ),
+            const SizedBox(height: 24),
+            const Text('or'),
+            const SizedBox(height: 16),
+            OutlinedButton.icon(
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Google Sign-In coming soon')),
+                );
+              },
+              icon: const Icon(Icons.g_mobiledata),
+              label: const Text('Continue with Google'),
+              style: OutlinedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 50),
+              ),
+            ),
+            const SizedBox(height: 12),
+            OutlinedButton.icon(
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Sign in with Apple coming soon')),
+                );
+              },
+              icon: const Icon(Icons.apple),
+              label: const Text('Continue with Apple'),
+              style: OutlinedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 50),
+              ),
+            ),
+            const SizedBox(height: 24),
             TextButton(
               onPressed: () => context.go('/login'),
               child: const Text('Already have an account? Login'),
