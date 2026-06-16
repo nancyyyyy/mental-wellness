@@ -47,7 +47,6 @@ def risk_detection(state: AgentState) -> AgentState:
     return state
 
 def memory_retrieval(state: AgentState) -> AgentState:
-    """Retrieve relevant memories before generating response"""
     memories = memory_service.retrieve_relevant_memories(
         state["user_id"], 
         state["user_input"],
@@ -64,30 +63,30 @@ def response_generation(state: AgentState) -> AgentState:
     # Build memory context
     memory_context = ""
     if state.get("retrieved_memories"):
-        memory_context = "\n\nRelevant things I remember about you:\n"
-        for mem in state["retrieved_memories"][-3:]:  # Use last 3 memories
+        memory_context = "\n\nThings I remember:\n"
+        for mem in state["retrieved_memories"][-3:]:
             memory_context += f"- {mem.get('text', '')}\n"
     
-    prompt = f"""You are a compassionate, emotionally intelligent companion who genuinely remembers and cares about the user.
+    prompt = f"""You are a warm, calm, and emotionally present companion. You remember important things about the user and respond naturally.
 
 {memory_context}
 
-Current user message: {state['user_input']}
+User said: {state['user_input']}
 
-Guidelines:
-- Respond warmly and naturally, like someone who knows them.
-- If relevant memories exist, gently reference them when it adds value.
-- Validate their emotions.
-- Ask thoughtful follow-up questions when appropriate.
-- Never dump all memories at once.
-- Be supportive without being overly clinical.
+Rules:
+- Keep responses relatively short and easy to read (2-4 sentences max).
+- Do NOT make assumptions about how the user is feeling unless they have clearly said so.
+- Be genuine and conversational — avoid sounding like a therapist.
+- If you have relevant memories, mention them naturally only if it adds value.
+- Validate what they shared without over-explaining.
+- Ask one thoughtful question if it feels right.
 
 Response:"""
     
     response = llm.invoke(prompt)
     state["response"] = response.content
     
-    # Store new memory after generating response
+    # Store new memory
     memory_service.extract_and_store_memories(
         state["user_id"], 
         state["user_input"], 
@@ -96,7 +95,7 @@ Response:"""
     
     return state
 
-# Build the graph with memory
+# Build the graph
 workflow = StateGraph(AgentState)
 workflow.add_node("emotion", emotion_analysis)
 workflow.add_node("risk", risk_detection)
