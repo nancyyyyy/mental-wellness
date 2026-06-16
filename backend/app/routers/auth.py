@@ -14,7 +14,6 @@ from pydantic import BaseModel, EmailStr
 router = APIRouter()
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-# ==================== SCHEMAS ====================
 class UserCreate(BaseModel):
     email: EmailStr
     password: str
@@ -31,7 +30,6 @@ class Token(BaseModel):
 class MessageResponse(BaseModel):
     message: str
 
-# ==================== HELPERS ====================
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
@@ -53,8 +51,6 @@ def hash_token(token: str) -> str:
     return hashlib.sha256(token.encode()).hexdigest()
 
 verification_tokens = {}
-
-# ==================== ROUTES ====================
 
 @router.post("/register", response_model=Token)
 async def register(
@@ -164,3 +160,33 @@ async def resend_verification(email: EmailStr, db: Session = Depends(get_db)):
     print(f"==================================\n")
 
     return {"message": "Verification email has been resent. Please check your inbox."}
+
+
+@router.post("/google")
+async def google_sign_in(payload: dict, db: Session = Depends(get_db)):
+    email = payload.get("email")
+    display_name = payload.get("displayName")
+    
+    if not email:
+        raise HTTPException(status_code=400, detail="Email is required from Google")
+
+    user = db.query(User).filter(User.email == email).first()
+    
+    if not user:
+        user = User(
+            email=email,
+            hashed_password="google-oauth",
+            full_name=display_name,
+            is_verified=True
+        )
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+    
+    access_token = create_access_token(data={"sub": str(user.id)})
+    
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "user_id": str(user.id)
+    }
