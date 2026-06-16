@@ -68,55 +68,36 @@ def knowledge_retrieval(state: AgentState) -> AgentState:
 def response_generation(state: AgentState) -> AgentState:
     memory_context = ""
     if state.get("retrieved_memories"):
-        memory_context = "\n\nRelevant memories about the user:\n"
+        memory_context = "\n\nThings I remember about you:\n"
         for mem in state["retrieved_memories"][-4:]:
             memory_context += f"- {mem.get('text', '')}\n"
 
     knowledge_context = ""
     if state.get("retrieved_knowledge"):
-        knowledge_context = "\n\nAvailable evidence-based techniques:\n"
+        knowledge_context = "\n\nHelpful techniques from wellness resources:\n"
         for item in state["retrieved_knowledge"]:
             title = item.get("title", "")
             explanation = item.get("detailed_explanation", "")
             steps = item.get("step_by_step_exercise", [])
-            knowledge_context += f"\n**{title}**\n"
-            knowledge_context += f"{explanation}\n"
+            knowledge_context += f"\n**{title}**\n{explanation}\n"
             if steps:
-                knowledge_context += "Steps: " + " | ".join(steps[:4]) + "\n"
+                knowledge_context += "How to practice: " + " | ".join(steps[:3]) + "\n"
 
-    prompt = f"""You are a warm, calm, and emotionally intelligent companion. 
-Follow this response structure **strictly**:
-
-STEP 1: BRIEF ACKNOWLEDGEMENT
-- Maximum 1-3 sentences.
-- Acknowledge what the user shared naturally.
-- Do not over-validate or sound overly sympathetic.
-
-STEP 2: EXPLAIN WHAT MAY BE HAPPENING
-- Use the retrieved knowledge and memory context.
-- Explain possible psychological or emotional mechanisms.
-- Help the user gain insight.
-
-STEP 3: IMPACT EXPLANATION
-- Briefly explain how this may be affecting the user emotionally, mentally, or in daily life.
-
-STEP 4: IMPROVEMENT STRATEGY
-- Recommend 1-2 most relevant practices from the "Available evidence-based techniques" above.
-- For each practice include:
-  - Practice name
-  - Why it helps (in context of user's situation)
-  - Simple how-to steps
-- Focus on practical, doable actions. Never guarantee results.
-
-STEP 5: THERAPEUTIC FOLLOW-UP QUESTION
-- Ask only 1 high-quality question.
-- Prioritize: Emotional state → Triggers → Patterns → Needs → Beliefs.
-- Make it natural and relevant.
+    prompt = f"""You are a warm, calm, and emotionally present companion.
 
 {memory_context}
 {knowledge_context}
 
 User said: {state['user_input']}
+
+Guidelines for your response:
+- Keep it natural and conversational (do NOT label sections like "Step 1" or "Step 2").
+- Start with a short, genuine acknowledgment of what the user shared.
+- If relevant, gently explain what might be happening emotionally or psychologically (use the techniques above when helpful).
+- If it fits naturally, suggest 1 practical technique or small step from the resources above. Explain briefly why it might help and how to try it.
+- End with one thoughtful, open-ended question that helps deepen understanding (about triggers, patterns, needs, or feelings).
+- Keep the overall response relatively short and easy to read.
+- Never sound robotic or like you're following a checklist.
 
 Response:"""
     
