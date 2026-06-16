@@ -49,11 +49,8 @@ def risk_detection(state: AgentState) -> AgentState:
     return state
 
 def memory_retrieval(state: AgentState) -> AgentState:
-    memories = memory_service.retrieve_relevant_memories(
-        state["user_id"], 
-        limit=6
-    )
-    state["retrieved_memories"] = memories
+    # Temporarily disabled to avoid DB type errors with "demo-user"
+    state["retrieved_memories"] = []
     return state
 
 def knowledge_retrieval(state: AgentState) -> AgentState:
@@ -111,14 +108,6 @@ Response:"""
     
     response = llm.invoke(prompt)
     state["response"] = response.content
-    
-    # Store new memory
-    memory_service.extract_and_store_memories(
-        state["user_id"], 
-        state["user_input"], 
-        state["response"]
-    )
-    
     return state
 
 # Build the graph
