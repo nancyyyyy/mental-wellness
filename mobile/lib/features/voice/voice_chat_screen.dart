@@ -3,6 +3,7 @@ import 'package:speech_to_text/speech_to_text.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:async';
 
 class VoiceChatScreen extends StatefulWidget {
   const VoiceChatScreen({super.key});
@@ -14,12 +15,17 @@ class VoiceChatScreen extends StatefulWidget {
 class _VoiceChatScreenState extends State<VoiceChatScreen> {
   final SpeechToText _speechToText = SpeechToText();
   final FlutterTts _flutterTts = FlutterTts();
-  
+
+  bool _isCallActive = false;
   bool _isListening = false;
   bool _isSpeaking = false;
   bool _isProcessing = false;
+
   String _lastWords = '';
   String _aiResponse = '';
+  String _statusText = 'Tap "Start Call" to begin';
+
+  Timer? _silenceTimer;
 
   @override
   void initState() {
@@ -30,45 +36,98 @@ class _VoiceChatScreenState extends State<VoiceChatScreen> {
 
   void _initSpeech() async {
     await _speechToText.initialize();
-    setState(() {});
   }
 
   void _initTts() async {
     await _flutterTts.setLanguage("en-US");
-    await _flutterTts.setSpeechRate(0.5);
+    await _flutterTts.setSpeechRate(0.48);
     await _flutterTts.setVolume(1.0);
     await _flutterTts.setPitch(1.0);
+
+    _flutterTts.setCompletionHandler(() {
+      if (_isCallActive) {
+        _startListening();
+      }
+    });
+  }
+
+  Future<void> _startCall() async {
+    setState(() {
+      _isCallActive = true;
+      _statusText = 'Listening...';
+      _lastWords = '';
+      _aiResponse = '';
+    });
+    await _startListening();
+  }
+
+  Future<void> _endCall() async {
+    setState(() {
+      _isCallActive = false;
+      _isListening = false;
+      _isSpeaking = false;
+      _isProcessing = false;
+      _statusText = 'Call ended';
+    });
+    await _speechToText.stop();
+    await _flutterTts.stop();
+    _silenceTimer?.cancel();
   }
 
   Future<void> _startListening() async {
-    if (!_isListening) {
-      bool available = await _speechToText.initialize();
-      if (available) {
-        setState(() => _isListening = true);
-        _speechToText.listen(
-          onResult: (result) {
-            setState(() {
-              _lastWords = result.recognizedWords;
-            });
-          },
-        );
-      }
-    }
+    if (!_isCallActive || _isListening || _isSpeaking || _isProcessing) return;
+
+    bool available = await _speechToText.initialize();
+    if (!available) return;
+
+    setState(() {
+      _isListening = true;
+      _lastWords = '';
+      _statusText = 'Listening...';
+    });
+
+    _silenceTimer?.cancel();
+
+    _speechToText.listen(
+      onResult: (result) {
+        setState(() {
+          _lastWords = result.recognizedWords;
+        });
+
+        // Reset silence timer whenever user speaks
+        _silenceTimer?.cancel();
+        _silenceTimer = Timer(const Duration(seconds: 2), () {
+          if (_isListening && _lastWords.isNotEmpty) {
+            _stopListeningAndSend();
+          }
+        });
+      },
+      listenFor: const Duration(seconds: 30),
+      pauseFor: const Duration(seconds: 2),
+    );
   }
 
-  Future<void> _stopListening() async {
+  Future<void> _stopListeningAndSend() async {
     await _speechToText.stop();
-    setState(() => _isListening = false);
-    
-    if (_lastWords.isNotEmpty) {
-      await _sendToBackend(_lastWords);
+    setState(() {
+      _isListening = false;
+    });
+    _silenceTimer?.cancel();
+
+    if (_lastWords.trim().isNotEmpty) {
+      await _sendToBackend(_lastWords.trim());
+    } else {
+      // If no speech detected, start listening again
+      if (_isCallActive) {
+        await _startListening();
+      }
     }
   }
 
   Future<void> _sendToBackend(String text) async {
     setState(() {
       _isProcessing = true;
-      _aiResponse = '';
+      _statusText = 'Thinking...';
     });
 
     try {
@@ -88,128 +147,138 @@ class _VoiceChatScreenState extends State<VoiceChatScreen> {
         setState(() {
           _aiResponse = aiText;
           _isProcessing = false;
+          _statusText = 'Speaking...';
         });
 
-        // Speak the response
         await _speak(aiText);
       }
     } catch (e) {
       setState(() {
-        _aiResponse = "Sorry, I couldn't connect right now.";
+        _aiResponse = "Sorry, connection issue.";
         _isProcessing = false;
       });
-    } finally {
-      setState(() {
-        _isProcessing = false;
-      });
+      if (_isCallActive) {
+        await Future.delayed(const Duration(seconds: 1));
+        await _startListening();
+      }
     }
   }
 
   Future<void> _speak(String text) async {
     setState(() => _isSpeaking = true);
     await _flutterTts.speak(text);
-    setState(() => _isSpeaking = false);
   }
 
-  Future<void> _stopSpeaking() async {
-    await _flutterTts.stop();
-    setState(() => _isSpeaking = false);
+  @override
+  void dispose() {
+    _speechToText.stop();
+    _flutterTts.stop();
+    _silenceTimer?.cancel();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Voice Companion'),
+        title: const Text('Voice Call'),
         backgroundColor: Colors.teal,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            const SizedBox(height: 40),
-            
-            // Status
-            Text(
-              _isListening 
-                  ? "🎤 Listening..." 
-                  : _isSpeaking 
-                      ? "🔊 Speaking..." 
-                      : _isProcessing 
-                          ? "🤔 Thinking..." 
-                          : "Tap the mic to speak",
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+        actions: [
+          if (_isCallActive)
+            TextButton(
+              onPressed: _endCall,
+              child: const Text('End Call', style: TextStyle(color: Colors.white)),
             ),
-            
-            const SizedBox(height: 30),
-            
-            // User speech
-            if (_lastWords.isNotEmpty)
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.blue[50],
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  "You said: $_lastWords",
-                  style: const TextStyle(fontSize: 16),
-                ),
+        ],
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Status
+              Text(
+                _statusText,
+                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
               ),
-            
-            const SizedBox(height: 20),
-            
-            // AI Response
-            if (_aiResponse.isNotEmpty)
+              const SizedBox(height: 40),
+
+              // Visual indicator
               Container(
-                padding: const EdgeInsets.all(16),
+                width: 160,
+                height: 160,
                 decoration: BoxDecoration(
-                  color: Colors.teal[50],
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  "Companion: $_aiResponse",
-                  style: const TextStyle(fontSize: 16),
-                ),
-              ),
-            
-            const Spacer(),
-            
-            // Mic Button
-            GestureDetector(
-              onTapDown: (_) => _startListening(),
-              onTapUp: (_) => _stopListening(),
-              child: Container(
-                width: 120,
-                height: 120,
-                decoration: BoxDecoration(
-                  color: _isListening ? Colors.red : Colors.teal,
+                  color: _isListening
+                      ? Colors.red.shade100
+                      : _isSpeaking
+                          ? Colors.teal.shade100
+                          : Colors.grey.shade200,
                   shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 10,
-                      spreadRadius: 2,
-                    )
-                  ],
                 ),
                 child: Icon(
-                  _isListening ? Icons.mic : Icons.mic_none,
-                  color: Colors.white,
-                  size: 60,
+                  _isListening
+                      ? Icons.mic
+                      : _isSpeaking
+                          ? Icons.volume_up
+                          : Icons.mic_none,
+                  size: 80,
+                  color: _isListening
+                      ? Colors.red
+                      : _isSpeaking
+                          ? Colors.teal
+                      : Colors.grey,
                 ),
               ),
-            ),
-            
-            const SizedBox(height: 20),
-            
-            Text(
-              _isListening ? "Release to send" : "Hold to speak",
-              style: TextStyle(color: Colors.grey[600]),
-            ),
-            
-            const SizedBox(height: 40),
-          ],
+
+              const SizedBox(height: 30),
+
+              // Last spoken text
+              if (_lastWords.isNotEmpty)
+                Text(
+                  "You: $_lastWords",
+                  style: const TextStyle(fontSize: 16, color: Colors.black87),
+                  textAlign: TextAlign.center,
+                ),
+
+              const SizedBox(height: 16),
+
+              // AI Response
+              if (_aiResponse.isNotEmpty)
+                Text(
+                  "Companion: $_aiResponse",
+                  style: const TextStyle(fontSize: 16, color: Colors.teal),
+                  textAlign: TextAlign.center,
+                ),
+
+              const Spacer(),
+
+              // Start / End Call Button
+              if (!_isCallActive)
+                ElevatedButton.icon(
+                  onPressed: _startCall,
+                  icon: const Icon(Icons.call),
+                  label: const Text('Start Voice Call'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.teal,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                    textStyle: const TextStyle(fontSize: 18),
+                  ),
+                )
+              else
+                Text(
+                  _isListening
+                      ? "Listening... (Speak naturally)"
+                      : _isSpeaking
+                          ? "Speaking..."
+                          : "Processing...",
+                  style: const TextStyle(fontSize: 16, color: Colors.grey),
+                ),
+
+              const SizedBox(height: 40),
+            ],
+          ),
         ),
       ),
     );
