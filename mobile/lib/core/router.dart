@@ -5,6 +5,7 @@ import '../features/auth/register_screen.dart';
 import '../features/chat/chat_screen.dart';
 import '../features/voice/voice_chat_screen.dart';
 import '../features/practices/practices_screen.dart';
+import '../features/insights/insights_screen.dart';
 import '../core/auth_service.dart';
 
 final appRouter = GoRouter(
@@ -16,10 +17,10 @@ final appRouter = GoRouter(
         state.uri.toString() == '/';
 
     if (!loggedIn && !goingToAuth) {
-      return '/'; // Redirect to welcome if not logged in
+      return '/';
     }
     if (loggedIn && goingToAuth) {
-      return '/chat'; // Redirect to chat if already logged in
+      return '/chat';
     }
     return null;
   },
@@ -32,6 +33,10 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/practices',
       builder: (context, state) => const PracticesScreen(userId: 'demo-user'),
+    ),
+    GoRoute(
+      path: '/insights',
+      builder: (context, state) => const InsightsScreen(userId: 'demo-user'),
     ),
   ],
 );
