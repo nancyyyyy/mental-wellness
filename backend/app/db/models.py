@@ -21,7 +21,7 @@ class Memory(Base):
     __tablename__ = "memories"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(String, nullable=False)   # Changed to String to support "demo-user" and JWT sub
+    user_id = Column(String, nullable=False)
     memory_text = Column(Text, nullable=False)
     memory_type = Column(String, default="general")
     created_at = Column(DateTime(timezone=True), server_default=func.now())
@@ -48,3 +48,16 @@ class Message(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     conversation = relationship("Conversation", back_populates="messages")
+
+
+class Insight(Base):
+    __tablename__ = "insights"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(String, nullable=False)
+    title = Column(String, nullable=False)
+    explanation = Column(Text, nullable=False)
+    insight_type = Column(String, default="general")
+    confidence = Column(Integer, default=70)
+    related_themes = Column(String)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
