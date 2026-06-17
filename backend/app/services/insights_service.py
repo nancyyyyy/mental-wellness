@@ -1,17 +1,35 @@
 from typing import List, Dict
-from sqlalchemy.orm import Session
 from ..db.base import get_db
 from ..db.models import Memory, Insight
-from datetime import datetime, timedelta
+from ..core.config import settings
+from langchain_groq import ChatGroq
+from langchain_openai import ChatOpenAI
 
 class InsightsService:
     def __init__(self):
-        pass
+        if settings.LLM_PROVIDER == "groq":
+            self.llm = ChatGroq(
+                groq_api_key=settings.GROQ_API_KEY,
+                model_name=settings.GROQ_MODEL,
+                temperature=0.6,
+            )
+        elif settings.LLM_PROVIDER == "openai":
+            self.llm = ChatOpenAI(
+                openai_api_key=settings.OPENAI_API_KEY,
+                model=settings.OPENAI_MODEL,
+                temperature=0.6,
+            )
+        else:
+            self.llm = ChatOpenAI(
+                base_url=f"{settings.OLLAMA_BASE_URL}/v1",
+                api_key="ollama",
+                model=settings.OLLAMA_MODEL,
+                temperature=0.6,
+            )
 
-    def generate_basic_insights(self, user_id: str, limit: int = 5) -> List[Dict]:
+    def generate_smart_insights(self, user_id: str, limit: int = 5) -> List[Dict]:
         """
-        Generate simple insights from memory data.
-        This is a starting point. Can be made much smarter later.
+        Generate high-quality insights using LLM + memory data.
         """
         db = next(get_db())
         try:
@@ -19,40 +37,66 @@ class InsightsService:
                 db.query(Memory)
                 .filter(Memory.user_id == user_id)
                 .order_by(Memory.created_at.desc())
-                .limit(30)
+                .limit(25)
                 .all()
             )
 
             if not memories:
                 return []
 
+            memory_text = "\n".join([f"- {m.memory_text} (type: {m.memory_type})" for m in memories])
+
+            prompt = f"""You are an experienced therapist analyzing a user's emotional patterns from their conversation history.
+
+Here are the user's recent memories:
+
+{memory_text}
+
+Based on the above, generate 2-4 meaningful, personalized insights. 
+Focus on:
+- Recurring emotional patterns or triggers
+- Behavioral tendencies
+- Areas of growth or positive change
+- Relationship dynamics (if visible)
+
+For each insight, return in this exact format:
+
+Title: [Short, clear title]
+Type: [trigger / behavioral / growth / relationship / general]
+Explanation: [2-4 sentences explaining the insight with warmth and clarity]
+Confidence: [60-90]
+
+Only return the insights in the format above. Do not add extra text."""
+
+            response = self.llm.invoke(prompt)
+            raw = response.content
+
             insights = []
+            blocks = raw.strip().split("\n\n")
 
-            type_count = {}
-            for mem in memories:
-                t = mem.memory_type or "general"
-                type_count[t] = type_count.get(t, 0) + 1
+            for block in blocks:
+                lines = block.strip().split("\n")
+                data = {}
+                for line in lines:
+                    if line.startswith("Title:"):
+                        data["title"] = line.replace("Title:", "").strip()
+                    elif line.startswith("Type:"):
+                        data["insight_type"] = line.replace("Type:", "").strip().lower()
+                    elif line.startswith("Explanation:"):
+                        data["explanation"] = line.replace("Explanation:", "").strip()
+                    elif line.startswith("Confidence:"):
+                        try:
+                            data["confidence"] = int(line.replace("Confidence:", "").strip())
+                        except:
+                            data["confidence"] = 70
 
-            if type_count:
-                most_common_type = max(type_count, key=type_count.get)
-                if type_count[most_common_type] >= 3:
+                if "title" in data and "explanation" in data:
                     insights.append({
-                        "title": f"Frequent {most_common_type.capitalize()} Memories",
-                        "explanation": f"You have recorded {type_count[most_common_type]} memories related to {most_common_type}. This may indicate it's an important area for you right now.",
-                        "insight_type": "pattern",
-                        "confidence": 65,
-                        "related_themes": most_common_type
+                        "title": data.get("title", "Personal Insight"),
+                        "explanation": data.get("explanation", ""),
+                        "insight_type": data.get("insight_type", "general"),
+                        "confidence": data.get("confidence", 70)
                     })
-
-            recent_emotions = [m for m in memories if m.memory_type == "emotion"][:5]
-            if len(recent_emotions) >= 2:
-                insights.append({
-                    "title": "Recent Emotional Activity",
-                    "explanation": f"You've shared several emotional experiences recently. Paying attention to these patterns can help build better self-awareness.",
-                    "insight_type": "growth",
-                    "confidence": 60,
-                    "related_themes": "emotion"
-                })
 
             return insights[:limit]
 
