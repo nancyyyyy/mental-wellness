@@ -1,0 +1,27 @@
+{
+  "title": "Therapist-Style Observation Language",
+  "category": "Insight Generation",
+  "pattern_type": "Language Guidelines",
+  "description": "The way insights are phrased significantly affects how they are received. Therapist-style language tends to be collaborative, tentative, and grounded in what the user has actually shared.",
+  "recommended_language_patterns": [
+    "It seems like...",
+    "I’ve noticed a pattern where...",
+    "There appears to be...",
+    "It looks like...",
+    "One thing that stands out is..."
+  ],
+  "language_to_avoid": [
+    "You always...",
+    "You never...",
+    "The problem is...",
+    "You should...",
+    "This is clearly because..."
+  ],
+  "key_principles": [
+    "Use tentative language rather than absolute statements",
+    "Ground observations in what the user has actually said or shown",
+    "Invite reflection instead of delivering conclusions",
+    "Balance honesty with gentleness"
+  ],
+  "tags": ["insight_delivery", "language", "therapeutic_stance", "tone"]
+}

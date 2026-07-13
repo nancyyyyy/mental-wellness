@@ -1,0 +1,15 @@
+{
+  "title": "Fear of Failure as a Driving Force",
+  "category": "Insight Generation",
+  "pattern_type": "Emotional + Behavioral Pattern",
+  "common_emotions": ["Anxiety", "Shame", "Procrastination", "Self-Doubt"],
+  "description": "Fear of failure often drives perfectionism, procrastination, or avoidance of new challenges. It can stem from early experiences where mistakes were heavily criticized or where self-worth became tied to achievement.",
+  "observation_language": [
+    "It seems like the fear of failing or not meeting expectations is influencing many of your decisions and behaviors.",
+    "There appears to be a pattern of either over-preparing or delaying action due to worry about not doing well enough.",
+    "It looks like self-worth may be closely connected to performance and outcomes."
+  ],
+  "underlying_fears": ["Fear of not being good enough", "Fear of judgment", "Fear of disappointment"],
+  "related_topics": ["Perfectionism", "Procrastination", "Self-Worth", "Avoidance"],
+  "tags": ["pattern", "fear_of_failure", "perfectionism", "procrastination"]
+}

@@ -1,0 +1,24 @@
+{
+  "title": "How to Deliver Insights Effectively",
+  "category": "Insight Generation",
+  "pattern_type": "Delivery Guidelines",
+  "description": "Not every observation should be shared. The timing, tone, and depth of an insight greatly affect whether it lands helpfully or feels overwhelming or intrusive.",
+  "key_principles": [
+    "Only share an insight if it adds value and the user seems emotionally stable enough to receive it.",
+    "Start gently and observe how the user responds before going deeper.",
+    "Use collaborative language ('It seems like...', 'I’ve noticed...') rather than definitive statements.",
+    "Connect the insight to something the user has already shared when possible.",
+    "Avoid overwhelming the user with too many observations in one response."
+  ],
+  "when_to_share": [
+    "User shows some emotional stability",
+    "There is a clear, recurring pattern across multiple conversations",
+    "The insight could help the user gain self-awareness or make a choice"
+  ],
+  "when_not_to_share": [
+    "User is in high emotional distress",
+    "The pattern is still unclear or based on very little data",
+    "The insight might feel shaming or too exposing"
+  ],
+  "tags": ["insight_delivery", "guidelines", "timing", "therapeutic_stance"]
+}

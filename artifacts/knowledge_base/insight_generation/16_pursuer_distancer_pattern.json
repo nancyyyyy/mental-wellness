@@ -1,0 +1,15 @@
+{
+  "title": "Pursuer-Distancer Dynamic in Relationships",
+  "category": "Insight Generation",
+  "pattern_type": "Relational Pattern",
+  "common_emotions": ["Anxiety", "Frustration", "Loneliness", "Anger"],
+  "description": "A common relationship pattern where one person tends to pursue closeness (pursuer) while the other tends to create distance (distancer) when things get emotionally intense. This often creates a cycle that increases distress for both people.",
+  "observation_language": [
+    "It seems like when you want more closeness, the other person tends to pull away, and when they come closer, you sometimes feel overwhelmed.",
+    "There appears to be a recurring push-pull dynamic in your relationships that leaves both people feeling frustrated.",
+    "It looks like this pattern of pursuing and distancing might be creating more disconnection than either of you wants."
+  ],
+  "underlying_fears": ["Fear of abandonment (pursuer)", "Fear of engulfment (distancer)", "Fear of vulnerability"],
+  "related_topics": ["Attachment", "Boundaries", "Communication", "Fear of Rejection"],
+  "tags": ["pattern", "relationships", "pursuer_distancer", "attachment"]
+}

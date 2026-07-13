@@ -1,0 +1,15 @@
+{
+  "title": "Growth vs Stuck Patterns Over Time",
+  "category": "Insight Generation",
+  "pattern_type": "Meta Pattern",
+  "common_emotions": ["Hope", "Frustration", "Self-Awareness"],
+  "description": "Over multiple conversations, it becomes possible to notice whether someone is moving toward growth (increased awareness, trying new behaviors, self-compassion) or staying in stuck loops (same patterns repeating without change).",
+  "observation_language": [
+    "Over the past few weeks, I’ve noticed you’re becoming more aware of certain patterns and starting to respond differently.",
+    "There seems to be a recurring cycle that keeps showing up, even though part of you wants to break out of it.",
+    "It looks like you’ve made progress in some areas while other patterns are still quite strong."
+  ],
+  "underlying_fears": ["Fear of not changing", "Fear of staying stuck", "Hope mixed with doubt"],
+  "related_topics": ["Self-Awareness", "Change", "Patterns", "Progress"],
+  "tags": ["pattern", "growth", "progress", "self_awareness"]
+}

@@ -1,0 +1,15 @@
+{
+  "title": "Comparison as a Source of Emotional Distress",
+  "category": "Insight Generation",
+  "pattern_type": "Cognitive Pattern",
+  "common_emotions": ["Anxiety", "Shame", "Envy", "Low Self-Worth"],
+  "description": "Frequent comparison with others often leads to feelings of inadequacy, even when life is going reasonably well. It can distort self-perception and reduce appreciation for one’s own path and progress.",
+  "observation_language": [
+    "It seems like comparing yourself to others is happening quite frequently and affecting how you feel about your own life.",
+    "There appears to be a pattern of measuring your worth against other people’s achievements or timelines.",
+    "It looks like comparison may be reducing your ability to feel satisfied with where you are."
+  ],
+  "underlying_fears": ["Fear of falling behind", "Fear of not being enough", "Fear of judgment"],
+  "related_topics": ["Self-Worth", "Social Media", "Perfectionism", "Envy"],
+  "tags": ["pattern", "comparison", "self_worth", "envy"]
+}

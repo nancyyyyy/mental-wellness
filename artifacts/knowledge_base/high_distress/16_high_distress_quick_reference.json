@@ -1,0 +1,9 @@
+{
+  "title": "High Distress Quick Reference Guide",
+  "category": "High Distress Support",
+  "emotional_state": ["High Distress", "Crisis"],
+  "severity_level": "High to Critical",
+  "therapy_framework": ["Trauma-Informed Care"],
+  "content": "Quick reference for responding when user is in high emotional distress:\n\n**Priority Order:**\n1. Emotional Containment & Safety\n2. Nervous System Regulation\n3. Gentle Reassurance\n4. One Calming Technique (from knowledge base)\n5. Stay Present\n\n**Do:**\n- Slow down significantly\n- Validate intensity of feelings\n- Reassure presence\n- Offer only one technique at a time\n- Go slowly and patiently\n\n**Don’t:**\n- Ask multiple questions\n- Try to analyze or find the cause immediately\n- Offer many techniques\n- Use overly cheerful or dismissive language\n- Push for deeper exploration too soon",
+  "tags": ["high_distress", "quick_reference", "guidelines", "safety"]
+}

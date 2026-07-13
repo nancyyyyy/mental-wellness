@@ -1,0 +1,15 @@
+{
+  "title": "Responding to Crisis Signals (Suicidal Ideation / 'I Want to Quit Living')",
+  "category": "High Distress Support",
+  "emotional_state": ["Crisis", "Suicidal Ideation", "Feeling Hopeless About Living"],
+  "severity_level": "Critical",
+  "therapy_framework": ["Crisis Intervention", "Trauma-Informed"],
+  "content": "When a user expresses crisis-level thoughts (wanting to die, quit living, or feeling they can't go on), the priority is safety and connection.\n\nKey approach:\n- Do not go into exploration or analysis mode.\n- Clearly encourage reaching out to human support or crisis resources.\n- Stay present and compassionate but do not position yourself as a crisis counselor.\n- Keep responses short, warm, and clear.\n- Offer to stay with them in the moment if they want, while strongly directing them toward real human support.",
+  "example_response": "Thank you for telling me that. I’m really glad you shared it. Right now, I want you to know you’re not alone, and there are people who can support you properly through this. I strongly encourage you to reach out to someone close to you or a crisis helpline right away. I’m here with you in this moment if you want to stay and talk.",
+  "what_to_avoid": [
+    "Digging into reasons why they feel this way",
+    "Giving long explanations or analysis",
+    "Trying to 'fix' their feelings in the moment"
+  ],
+  "tags": ["high_distress", "crisis", "suicidal_ideation", "safety"]
+}

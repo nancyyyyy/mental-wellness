@@ -1,0 +1,14 @@
+{
+  "title": "When Not to Share an Insight",
+  "category": "Insight Generation",
+  "pattern_type": "Delivery Guidelines",
+  "description": "Knowing when *not* to share an observation is just as important as knowing when to share one. Poorly timed or overly deep insights can increase shame, overwhelm, or defensiveness.",
+  "key_principles": [
+    "Do not share insights when the user is in high emotional distress (Level 3+).",
+    "Avoid sharing observations that could feel exposing or shaming without sufficient trust and safety.",
+    "Do not overload the user with multiple insights in one response.",
+    "If the pattern is still unclear or based on very limited data, it is better to stay curious rather than conclusive.",
+    "If the user is not asking for reflection or seems closed off, it may not be the right moment."
+  ],
+  "tags": ["insight_delivery", "resistance", "safety", "timing"]
+}

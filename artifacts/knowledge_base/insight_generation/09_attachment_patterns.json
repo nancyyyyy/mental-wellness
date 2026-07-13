@@ -1,0 +1,15 @@
+{
+  "title": "Attachment Patterns in Relationships",
+  "category": "Insight Generation",
+  "pattern_type": "Relational Pattern",
+  "common_emotions": ["Anxiety", "Fear", "Anger", "Loneliness"],
+  "description": "Early attachment experiences often shape how people behave in close relationships — whether they tend to seek closeness anxiously, avoid intimacy, or swing between both. These patterns can create recurring difficulties in romantic and emotional connections.",
+  "observation_language": [
+    "It seems like there’s a pattern in how you respond when you feel emotionally close to or distant from someone important.",
+    "There appears to be a recurring theme around fear of abandonment or fear of being too dependent in relationships.",
+    "It looks like past experiences may be influencing how safe or unsafe closeness feels in your current relationships."
+  ],
+  "underlying_fears": ["Fear of abandonment", "Fear of engulfment", "Fear of not being loved"],
+  "related_topics": ["Relationships", "Fear of Rejection", "Emotional Safety", "Boundaries"],
+  "tags": ["pattern", "attachment", "relationships", "fear"]
+}

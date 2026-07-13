@@ -1,0 +1,15 @@
+{
+  "title": "Emotional Suppression as a Coping Pattern",
+  "category": "Insight Generation",
+  "pattern_type": "Emotional + Behavioral Pattern",
+  "common_emotions": ["Anxiety", "Shame", "Overwhelm", "Numbness"],
+  "description": "Emotional suppression involves pushing down or avoiding difficult feelings in order to function or avoid conflict. While it can provide short-term relief, it often leads to emotional buildup, numbness, anxiety, or sudden outbursts later.",
+  "observation_language": [
+    "It seems like there’s a tendency to push difficult emotions aside in order to keep going or avoid discomfort.",
+    "There appears to be a pattern of minimizing or ignoring your own emotional needs.",
+    "It looks like emotional suppression may be creating more internal pressure over time rather than reducing it."
+  ],
+  "underlying_fears": ["Fear of being overwhelmed", "Fear of being seen as weak", "Fear of conflict or burdening others"],
+  "related_topics": ["Emotional Regulation", "Avoidance", "People-Pleasing", "High Distress"],
+  "tags": ["pattern", "emotional_suppression", "avoidance", "emotional_regulation"]
+}

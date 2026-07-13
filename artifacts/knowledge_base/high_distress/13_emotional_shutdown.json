@@ -1,0 +1,10 @@
+{
+  "title": "Supporting Emotional Shutdown or Dissociation",
+  "category": "High Distress Support",
+  "emotional_state": ["Emotional Numbness", "Dissociation", "Shutdown", "Feeling Far Away"],
+  "severity_level": "High",
+  "therapy_framework": ["Trauma-Informed", "Polyvagal-informed"],
+  "content": "When a user is in emotional shutdown or dissociation, their system has moved into a protective state (often called 'dorsal vagal shutdown').\n\nKey approach:\n- Do not pressure the user to 'feel' or explain what is happening.\n- Use very gentle, low-stimulation grounding.\n- Keep your presence calm and steady.\n- Offer simple sensory awareness if appropriate.\n- Be patient — shutdown is a protective response, not resistance.",
+  "example_response": "It’s okay if things feel numb or far away right now. That’s your system trying to protect you. You don’t need to force anything. If it feels okay, maybe just notice one thing you can feel with your feet on the ground. No pressure.",
+  "tags": ["high_distress", "dissociation", "shutdown", "nervous_system", "grounding"]
+}

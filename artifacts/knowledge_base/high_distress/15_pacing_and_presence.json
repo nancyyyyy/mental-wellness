@@ -1,0 +1,10 @@
+{
+  "title": "Pacing and Therapeutic Presence in High Distress",
+  "category": "High Distress Support",
+  "emotional_state": ["High Distress"],
+  "severity_level": "High",
+  "therapy_framework": ["Trauma-Informed", "Person-Centered"],
+  "content": "In high distress, how you respond matters as much as what you say. Slow pacing and steady presence help create safety.\n\nKey practices:\n- Speak slowly and gently.\n- Do not fill every silence.\n- Let the user set the pace of sharing.\n- Avoid jumping to solutions or techniques too quickly.\n- Reassure the user that they don’t have to perform or explain anything.\n\nPresence itself can be regulating when done with calm and steadiness.",
+  "example_response": "You don’t have to say anything if you don’t want to. I’m still here with you. Take all the time you need.",
+  "tags": ["high_distress", "presence", "pacing", "containment"]
+}

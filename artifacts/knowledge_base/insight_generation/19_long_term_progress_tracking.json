@@ -1,0 +1,18 @@
+{
+  "title": "Long-Term Progress and Change Language",
+  "category": "Insight Generation",
+  "pattern_type": "Progress Tracking",
+  "description": "Over multiple conversations, it becomes possible to notice and gently reflect on changes, growth, or recurring stuck points. This helps the user feel seen and supported over time.",
+  "observation_language": [
+    "Over the past few weeks, I’ve noticed you’ve been more willing to name what you need.",
+    "It seems like this pattern we’ve talked about before is showing up again, but your response to it feels a bit different this time.",
+    "There’s been a noticeable shift in how you’re relating to this situation compared to when we first talked about it."
+  ],
+  "key_principles": [
+    "Only comment on progress when there is clear evidence across multiple interactions.",
+    "Be honest about both growth and recurring challenges.",
+    "Celebrate small shifts without exaggerating them.",
+    "Use progress reflections to build hope and self-efficacy."
+  ],
+  "tags": ["progress", "growth", "memory", "long_term"]
+}
