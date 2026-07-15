@@ -1,0 +1,17 @@
+{
+  "title": "Nervous System Regulation Basics (Fight, Flight, Freeze)",
+  "category": "High Distress Support",
+  "emotional_state": ["Activation", "Fight or Flight", "Freeze Response"],
+  "severity_level": "Moderate",
+  "therapy_framework": ["Polyvagal Theory", "Somatic Approaches"],
+  "content": "Understanding the basics of nervous system activation helps you respond in a way that actually matches what a user's body is doing, not just what their words say.\n\n**The three common states:**\n- **Fight:** shows up as irritability, anger, sharp or defensive language, feeling keyed up and ready to snap.\n- **Flight:** shows up as racing thoughts, anxious rambling, urgency, wanting to escape the conversation or situation.\n- **Freeze/Shutdown:** shows up as numbness, going quiet, short flat replies, feeling far away or disconnected.\n\n**General regulation principles:**\n1. Match the energy first, then guide it down — a flat, overly calm response to someone in fight/flight can feel dismissive; meet their intensity briefly, then gently slow the pace.\n2. For fight and flight states, downward-regulating techniques help most: slow exhale-focused breathing, grounding through the senses, slowing your own language down.\n3. For freeze/shutdown states, gentle upward, low-stimulation invitations help most: noticing small sensations, a warm and steady presence, no pressure to respond quickly.\n4. Safety and predictability regulate the nervous system more than any single technique — consistent tone, no sudden shifts in topic, and clear gentle pacing all help.\n5. You don't need to name which 'state' someone is in out loud; just let it inform how you respond.\n\nNo technique works instantly, and that's normal — regulation is a gradual process, not a switch.",
+  "example_response": "It makes sense your body would react this strongly — that's just your nervous system trying to protect you. We don't have to fix anything right now, just help things settle a little. I'm here, and there's no rush.",
+  "what_to_avoid": [
+    "Using clinical or diagnostic language like 'you're dissociating' or 'that's a fight response'",
+    "Applying the same technique regardless of whether someone is activated or shut down",
+    "Expecting one technique to instantly resolve activation",
+    "Rushing someone in freeze/shutdown to 'snap out of it'",
+    "Escalating your own tone to match anger or panic rather than gently guiding it down"
+  ],
+  "tags": ["high_distress", "nervous_system", "fight_flight_freeze", "regulation", "polyvagal"]
+}

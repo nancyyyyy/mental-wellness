@@ -1,0 +1,17 @@
+{
+  "title": "Supporting a User Who Is Crying or Expressing Raw Grief",
+  "category": "High Distress Support",
+  "emotional_state": ["Crying", "Grief", "Raw Sadness", "Overwhelming Sorrow"],
+  "severity_level": "Moderate",
+  "therapy_framework": ["Trauma-Informed Care", "Person-Centered Therapy"],
+  "content": "When a user is crying or expressing raw grief, they need to feel safe letting it out — not managed, redirected, or rushed toward resolution.\n\n**Key approach:**\n1. Acknowledge what you're witnessing without making it bigger or smaller than it is.\n2. Give explicit permission for the tears or grief to be there.\n3. Slow your own pacing to match theirs — short sentences, more space.\n4. Reflect the feeling back in simple, human language rather than analyzing it.\n5. Only ask a gentle open question once the initial wave has softened, and only if they seem ready.\n\nCrying is a release, not a problem to solve. Your job is to stay steady and warm while it moves through them, not to stop it.",
+  "example_response": "I'm right here with you. You don't have to hold it together for me — whatever's coming up, let it come. Take your time.",
+  "what_to_avoid": [
+    "Rushing to say 'it's okay' before they've had space to feel it",
+    "Asking 'why' questions while they're still in the middle of crying",
+    "Offering solutions or advice before they've asked for any",
+    "Trying to make them laugh or change the subject to lighten the mood",
+    "Going silent in a way that feels like discomfort rather than presence"
+  ],
+  "tags": ["high_distress", "crying", "grief", "emotional_release", "presence"]
+}

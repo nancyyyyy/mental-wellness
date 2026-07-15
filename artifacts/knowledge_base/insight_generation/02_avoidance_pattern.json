@@ -1,0 +1,16 @@
+{
+  "title": "Avoidance as a Protective Pattern",
+  "category": "Insight Generation",
+  "pattern_type": "Behavioral + Emotional Pattern",
+  "common_emotions": ["Anxiety", "Relief", "Guilt", "Overwhelm"],
+  "description": "Avoidance is the tendency to steer away from difficult emotions, conversations, or situations in order to reduce distress in the moment. It often develops as a sensible short-term strategy for managing overwhelm, and it can genuinely work in the short run. Over time, though, avoided problems and feelings tend to accumulate, which can increase anxiety, shrink a person's sense of capability, and keep the underlying issue unresolved.",
+  "observation_language": [
+    "It seems like there’s a pattern of putting off or steering around things that feel emotionally difficult.",
+    "There appears to be a tendency to avoid situations that bring up discomfort, even when part of you wants to address them.",
+    "It looks like avoiding this has offered some short-term relief, but it may also be adding to the weight of it over time.",
+    "There seems to be a pattern of distracting from or delaying difficult feelings rather than sitting with them."
+  ],
+  "underlying_fears": ["Fear of being overwhelmed", "Fear of facing painful emotions", "Fear of failure or making things worse", "Fear of losing control"],
+  "related_topics": ["Emotional Suppression", "Fear of Failure", "Procrastination", "High Distress"],
+  "tags": ["pattern", "avoidance", "coping", "emotional_regulation", "overwhelm"]
+}

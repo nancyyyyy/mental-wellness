@@ -1,0 +1,16 @@
+{
+  "title": "Perfectionism and Its Emotional Cost",
+  "category": "Insight Generation",
+  "pattern_type": "Cognitive + Emotional Pattern",
+  "common_emotions": ["Anxiety", "Shame", "Frustration", "Exhaustion"],
+  "description": "Perfectionism involves holding oneself to standards that leave little room for error, often tying self-worth tightly to achievement or flawless performance. It can develop as a way to earn approval, avoid criticism, or feel a sense of control. While it may drive real accomplishment, it frequently comes with chronic dissatisfaction, fear of failure, and difficulty recognizing or enjoying success.",
+  "observation_language": [
+    "It seems like there’s a pattern of holding yourself to very high standards, even when it takes a toll on you.",
+    "There appears to be a tendency to focus on what wasn’t good enough rather than what went well.",
+    "It looks like it can be hard to feel satisfied or finished with something, even after a lot of effort.",
+    "There seems to be a pattern of tying your sense of worth to how well you perform."
+  ],
+  "underlying_fears": ["Fear of failure", "Fear of not being good enough", "Fear of being judged or criticized", "Fear of losing control"],
+  "related_topics": ["Self-Criticism", "Self-Worth and Identity", "Fear of Failure", "Comparison Patterns"],
+  "tags": ["pattern", "perfectionism", "self_worth", "fear_of_failure", "self_criticism"]
+}

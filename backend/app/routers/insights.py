@@ -20,7 +20,7 @@ def get_insights(user_id: str, limit: int = 20, db: Session = Depends(get_db)):
 def generate_insights(user_id: str):
     """Generate new insights for the user based on their memory"""
     try:
-        new_insights = insights_service.generate_basic_insights(user_id)
+        new_insights = insights_service.generate_smart_insights(user_id)
         
         saved = []
         for ins in new_insights:

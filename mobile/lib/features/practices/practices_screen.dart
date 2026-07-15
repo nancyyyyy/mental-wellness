@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../../core/api_config.dart';
+import '../../shared/widgets/loading_view.dart';
+import '../../shared/widgets/error_view.dart';
+import '../../shared/widgets/empty_state_view.dart';
 
 class PracticesScreen extends StatefulWidget {
   final String userId;
@@ -24,7 +28,7 @@ class _PracticesScreenState extends State<PracticesScreen> {
 
     try {
       final response = await http.get(
-        Uri.parse('http://localhost:8000/practices/recommendations?user_id=${widget.userId}'),
+        Uri.parse('${ApiConfig.baseUrl}/practices/recommendations?user_id=${widget.userId}'),
       );
 
       if (response.statusCode == 200) {
@@ -56,6 +60,9 @@ class _PracticesScreenState extends State<PracticesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Practices'),
@@ -67,15 +74,14 @@ class _PracticesScreenState extends State<PracticesScreen> {
         ],
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const LoadingView()
           : _error.isNotEmpty
-              ? Center(child: Text(_error, style: const TextStyle(color: Colors.red)))
+              ? ErrorView(message: _error, onRetry: _loadPractices)
               : _practices.isEmpty
-                  ? const Center(
-                      child: Text(
-                        'No personalized practices yet.\nTry chatting more to unlock recommendations.',
-                        textAlign: TextAlign.center,
-                      ),
+                  ? const EmptyStateView(
+                      message:
+                          'No personalized practices yet.\nTry chatting more to unlock recommendations.',
+                      icon: Icons.self_improvement_outlined,
                     )
                   : ListView.builder(
                       padding: const EdgeInsets.all(16),
@@ -91,38 +97,40 @@ class _PracticesScreenState extends State<PracticesScreen> {
                               children: [
                                 Text(
                                   practice['name'] ?? 'Practice',
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                  style: textTheme.titleLarge,
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
                                   practice['why'] ?? '',
-                                  style: const TextStyle(fontSize: 15),
+                                  style: textTheme.bodyMedium,
                                 ),
                                 const SizedBox(height: 12),
-                                const Text(
+                                Text(
                                   'How to practice:',
-                                  style: TextStyle(fontWeight: FontWeight.w600),
+                                  style: textTheme.labelLarge,
                                 ),
                                 const SizedBox(height: 4),
-                                Text(practice['how'] ?? ''),
+                                Text(practice['how'] ?? '',
+                                    style: textTheme.bodyMedium),
                                 const SizedBox(height: 12),
                                 Container(
                                   padding: const EdgeInsets.all(12),
                                   decoration: BoxDecoration(
-                                    color: Colors.teal.shade50,
-                                    borderRadius: BorderRadius.circular(8),
+                                    color: scheme.secondaryContainer,
+                                    borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Row(
                                     children: [
-                                      const Icon(Icons.check_circle, color: Colors.teal, size: 20),
+                                      Icon(Icons.check_circle,
+                                          color: scheme.onSecondaryContainer,
+                                          size: 20),
                                       const SizedBox(width: 8),
                                       Expanded(
                                         child: Text(
                                           practice['benefit'] ?? '',
-                                          style: const TextStyle(color: Colors.teal),
+                                          style: TextStyle(
+                                              color:
+                                                  scheme.onSecondaryContainer),
                                         ),
                                       ),
                                     ],

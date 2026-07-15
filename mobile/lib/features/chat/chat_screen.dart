@@ -3,6 +3,10 @@ import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../../core/auth_service.dart';
+import '../../core/api_config.dart';
+import '../../shared/models/chat_message.dart';
+import '../../shared/widgets/message_bubble.dart';
+import '../../shared/widgets/typing_indicator.dart';
 
 class ChatScreen extends StatefulWidget {
   final String? userId;
@@ -15,11 +19,15 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _controller = TextEditingController();
-  final List<String> _messages = [
-    "Companion: Hello! I'm your Mind Companion. How are you feeling today?"
+  final List<ChatMessage> _messages = [
+    ChatMessage(
+      role: ChatRole.companion,
+      content: "Hello! I'm your Mind Companion. How are you feeling today?",
+    ),
   ];
   bool _isLoading = false;
   late String userId;
+  int? _conversationId;
 
   @override
   void initState() {
@@ -27,23 +35,24 @@ class _ChatScreenState extends State<ChatScreen> {
     userId = widget.userId ?? "demo-user";
   }
 
-  Future<void> _sendMessage() async {
-    if (_controller.text.trim().isEmpty) return;
+  Future<void> _sendMessage([String? retryText]) async {
+    final userMessage = retryText ?? _controller.text.trim();
+    if (userMessage.isEmpty) return;
 
-    final userMessage = _controller.text.trim();
     setState(() {
-      _messages.add("You: $userMessage");
+      _messages.add(ChatMessage(role: ChatRole.user, content: userMessage));
       _isLoading = true;
     });
-    _controller.clear();
+    if (retryText == null) _controller.clear();
 
     try {
       final response = await http.post(
-        Uri.parse('http://localhost:8000/chat/message'),
+        Uri.parse('${ApiConfig.baseUrl}/chat/message'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           "content": userMessage,
           "user_id": userId,
+          "conversation_id": _conversationId,
         }),
       );
 
@@ -51,16 +60,26 @@ class _ChatScreenState extends State<ChatScreen> {
         final data = jsonDecode(response.body);
         final aiResponse = data['response'] ?? "I'm here to support you.";
         setState(() {
-          _messages.add("Companion: $aiResponse");
+          _messages.add(
+              ChatMessage(role: ChatRole.companion, content: aiResponse));
+          _conversationId = data['conversation_id'] ?? _conversationId;
         });
       } else {
         setState(() {
-          _messages.add("Companion: Sorry, I'm having trouble responding.");
+          _messages.add(ChatMessage(
+            role: ChatRole.companion,
+            content: "Sorry, I'm having trouble responding.",
+            isError: true,
+          ));
         });
       }
     } catch (e) {
       setState(() {
-        _messages.add("Companion: Connection error. Is backend running?");
+        _messages.add(ChatMessage(
+          role: ChatRole.companion,
+          content: "Connection error. Is the backend running?",
+          isError: true,
+        ));
       });
     } finally {
       setState(() {
@@ -74,7 +93,6 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Mind Companion'),
-        backgroundColor: Colors.teal,
         actions: [
           IconButton(
             icon: const Icon(Icons.mic),
@@ -85,7 +103,7 @@ class _ChatScreenState extends State<ChatScreen> {
             tooltip: 'Logout',
             onPressed: () async {
               await AuthService.logout();
-              context.go('/login');
+              if (context.mounted) context.go('/login');
             },
           ),
         ],
@@ -95,30 +113,27 @@ class _ChatScreenState extends State<ChatScreen> {
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.all(16),
-              itemCount: _messages.length,
+              itemCount: _messages.length + (_isLoading ? 1 : 0),
               itemBuilder: (context, index) {
+                if (index == _messages.length) {
+                  return const TypingIndicator();
+                }
                 final message = _messages[index];
-                final isUser = message.startsWith("You:");
-                return Align(
-                  alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(vertical: 4),
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: isUser ? Colors.teal[100] : Colors.grey[200],
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(message, style: const TextStyle(fontSize: 16)),
-                  ),
+                return MessageBubble(
+                  message: message,
+                  onRetry: message.isError
+                      ? () {
+                          final lastUser = _messages.lastWhere(
+                            (m) => m.role == ChatRole.user,
+                            orElse: () => message,
+                          );
+                          _sendMessage(lastUser.content);
+                        }
+                      : null,
                 );
               },
             ),
           ),
-          if (_isLoading)
-            const Padding(
-              padding: EdgeInsets.all(8),
-              child: CircularProgressIndicator(),
-            ),
           Padding(
             padding: const EdgeInsets.all(12),
             child: Row(
@@ -128,15 +143,15 @@ class _ChatScreenState extends State<ChatScreen> {
                     controller: _controller,
                     decoration: const InputDecoration(
                       hintText: "Type your message...",
-                      border: OutlineInputBorder(),
                     ),
                     onSubmitted: (_) => _sendMessage(),
                   ),
                 ),
                 const SizedBox(width: 8),
                 IconButton(
-                  icon: const Icon(Icons.send, color: Colors.teal),
-                  onPressed: _isLoading ? null : _sendMessage,
+                  icon: Icon(Icons.send,
+                      color: Theme.of(context).colorScheme.primary),
+                  onPressed: _isLoading ? null : () => _sendMessage(),
                 ),
               ],
             ),

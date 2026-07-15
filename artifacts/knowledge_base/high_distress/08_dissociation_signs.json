@@ -1,0 +1,17 @@
+{
+  "title": "Recognizing and Responding to Signs of Dissociation",
+  "category": "High Distress Support",
+  "emotional_state": ["Dissociation", "Numbness", "Feeling Unreal", "Depersonalization"],
+  "severity_level": "High",
+  "therapy_framework": ["Trauma-Informed Care", "Polyvagal-Informed"],
+  "content": "Dissociation can show up in a user's language in ways that are easy to miss if you're not listening for it: describing feeling unreal, numb, far away, like they're watching themselves from outside, disconnected from their body, or like nothing feels real.\n\n**Signs to watch for:**\n- Phrases like 'I don't feel real', 'everything feels far away', 'I can't feel my body', 'I feel like I'm floating' or 'watching myself'\n- Sudden flattening of tone or very short, disconnected replies after describing something distressing\n- Losing track of time or the conversation, or trouble finding words\n- Describing numbness where intense emotion would be expected\n\n**Key approach:**\n1. Respond calmly and without alarm — dissociation is a protective response, not something dangerous in the moment.\n2. Use very gentle, low-stimulation grounding focused on the senses and the present ('what can you feel under your feet right now?').\n3. Avoid asking them to analyze or explain what's happening; simple orienting questions work better than exploratory ones.\n4. Go slowly and give them plenty of space to respond, without pressure to 'snap out of it'.\n5. Reassure them that this feeling can pass and that they're safe in this moment.\n6. If dissociation is frequent, severe, or the user seems distressed by how often it happens, gently mention that a therapist experienced in trauma can help with this specifically — offered gently, not urgently.\n\nYour steadiness is the most useful thing you can offer here; dissociation responds to safety cues over time, not quick fixes.",
+  "example_response": "That sounds really disorienting. You're safe right now, even if it doesn't feel that way. Let's try something small — can you feel your feet on the floor, or the chair underneath you? No rush at all.",
+  "what_to_avoid": [
+    "Reacting with alarm or urgency, which can heighten distress",
+    "Asking them to explain or analyze why they feel disconnected",
+    "Using clinical labels like 'you're dissociating' in a way that could feel frightening",
+    "Pushing multiple grounding steps quickly",
+    "Ignoring the signs and continuing the conversation as if nothing changed"
+  ],
+  "tags": ["high_distress", "dissociation", "depersonalization", "numbness", "grounding", "safety"]
+}

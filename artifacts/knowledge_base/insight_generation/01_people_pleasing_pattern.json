@@ -1,0 +1,16 @@
+{
+  "title": "People-Pleasing as a Relational Pattern",
+  "category": "Insight Generation",
+  "pattern_type": "Relational + Behavioral Pattern",
+  "common_emotions": ["Anxiety", "Resentment", "Guilt", "Overwhelm"],
+  "description": "People-pleasing involves consistently prioritizing others' needs, comfort, or approval over one's own, often out of a learned belief that being liked or needed is what keeps relationships safe. It can look like difficulty saying no, over-apologizing, or agreeing to things out of fear rather than desire. Over time, this pattern tends to build quiet resentment and disconnect a person from their own preferences and limits.",
+  "observation_language": [
+    "It seems like there’s a pattern of putting other people’s needs ahead of your own, even when it costs you something.",
+    "There appears to be a tendency to agree or say yes before checking in with how you actually feel about it.",
+    "It looks like saying no or disappointing someone brings up a lot of discomfort, even in small moments.",
+    "There seems to be a pattern of feeling responsible for other people’s emotions or reactions."
+  ],
+  "underlying_fears": ["Fear of conflict", "Fear of rejection or disapproval", "Fear of being seen as selfish or difficult", "Fear of losing the relationship"],
+  "related_topics": ["Fear of Rejection", "Boundaries", "Self-Worth and Identity", "Emotional Suppression"],
+  "tags": ["pattern", "people_pleasing", "boundaries", "approval_seeking", "relationships"]
+}

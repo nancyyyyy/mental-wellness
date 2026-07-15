@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../../core/api_config.dart';
+import '../../shared/widgets/loading_view.dart';
+import '../../shared/widgets/error_view.dart';
+import '../../shared/widgets/empty_state_view.dart';
 
 class InsightsScreen extends StatefulWidget {
   final String userId;
@@ -24,7 +28,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://localhost:8000/insights/generate?user_id=${widget.userId}'),
+        Uri.parse('${ApiConfig.baseUrl}/insights/generate?user_id=${widget.userId}'),
       );
 
       if (response.statusCode == 200) {
@@ -55,7 +59,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
 
     try {
       final response = await http.get(
-        Uri.parse('http://localhost:8000/insights/?user_id=${widget.userId}'),
+        Uri.parse('${ApiConfig.baseUrl}/insights/?user_id=${widget.userId}'),
       );
 
       if (response.statusCode == 200) {
@@ -81,6 +85,8 @@ class _InsightsScreenState extends State<InsightsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Insights'),
@@ -99,26 +105,21 @@ class _InsightsScreenState extends State<InsightsScreen> {
               onPressed: _isLoading ? null : _generateInsights,
               icon: const Icon(Icons.auto_awesome),
               label: const Text('Generate New Insights'),
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 50),
-              ),
             ),
           ),
           if (_error.isNotEmpty)
             Padding(
-              padding: const EdgeInsets.all(16),
-              child: Text(_error, style: const TextStyle(color: Colors.red)),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: ErrorView(message: _error, onRetry: _loadInsights),
             ),
           Expanded(
             child: _isLoading
-                ? const Center(child: CircularProgressIndicator())
+                ? const LoadingView()
                 : _insights.isEmpty
-                    ? const Center(
-                        child: Text(
-                          "We're still learning about your emotional patterns.\nContinue chatting to unlock personalized insights.",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.grey),
-                        ),
+                    ? const EmptyStateView(
+                        message:
+                            "We're still learning about your emotional patterns.\nContinue chatting to unlock personalized insights.",
+                        icon: Icons.insights_outlined,
                       )
                     : ListView.builder(
                         itemCount: _insights.length,
@@ -133,19 +134,16 @@ class _InsightsScreenState extends State<InsightsScreen> {
                                 children: [
                                   Text(
                                     insight['title'] ?? 'Insight',
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                    style: textTheme.titleMedium,
                                   ),
                                   const SizedBox(height: 8),
-                                  Text(insight['explanation'] ?? ''),
+                                  Text(insight['explanation'] ?? '',
+                                      style: textTheme.bodyMedium),
                                   if (insight['insight_type'] != null)
                                     Padding(
                                       padding: const EdgeInsets.only(top: 8),
                                       child: Chip(
                                         label: Text(insight['insight_type']),
-                                        backgroundColor: Colors.teal.shade50,
                                       ),
                                     ),
                                 ],

@@ -1,0 +1,17 @@
+{
+  "title": "Noticing Repeated Distress Patterns Across Conversations",
+  "category": "High Distress Support",
+  "emotional_state": ["Recurring Distress", "Chronic Overwhelm", "Repeated Crisis-Adjacent Themes"],
+  "severity_level": "High",
+  "therapy_framework": ["Trauma-Informed Care"],
+  "content": "When a user repeatedly returns to the same distress pattern across conversations — the same trigger, the same crisis-adjacent feeling, the same cycle — it's worth gently acknowledging the pattern without turning it into a clinical assessment.\n\n**Key approach:**\n1. Notice the pattern internally before naming it; only bring it up if it seems relevant and won't feel like being surveilled.\n2. Name it softly and non-judgmentally: 'I've noticed this feeling has come up a few times for you' rather than analyzing the cause or labeling it.\n3. Stay curious rather than diagnostic — ask how they feel about noticing the pattern themselves, rather than telling them what it means.\n4. Avoid implying blame or fatigue on your part ('again?' energy); every occurrence deserves the same care as the first.\n5. If the pattern is frequent, intensifying, or involves recurring crisis-level language, gently and honestly encourage connecting with a therapist or counselor who can work with the pattern directly over time — framed as additional support, not a replacement for what you're offering.\n6. Continue offering full presence and support in the moment regardless of whether they take that suggestion.\n\nNaming a pattern with care can help a user feel seen in a way that isolated conversations can't, but it should always be offered gently and never used to make them feel judged or like a burden.",
+  "example_response": "I want to gently mention something — this feeling has come up for you a few times now. I'm not saying that to put pressure on you, just noticing it because I care. Would it help to talk about what's been going on, or would connecting with a therapist who can work through this pattern with you feel useful?",
+  "what_to_avoid": [
+    "Naming the pattern in a way that sounds like judgment or fatigue",
+    "Diagnosing or clinically labeling the pattern",
+    "Bringing it up every single time instead of when it feels genuinely relevant",
+    "Making professional support sound mandatory or like a rejection",
+    "Ignoring a clearly worsening or intensifying pattern"
+  ],
+  "tags": ["high_distress", "recurring_patterns", "repeated_distress", "professional_support", "pattern_recognition"]
+}

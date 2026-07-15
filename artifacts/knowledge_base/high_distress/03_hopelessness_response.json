@@ -1,0 +1,17 @@
+{
+  "title": "Responding to Hopelessness and 'What's the Point' Feelings",
+  "category": "High Distress Support",
+  "emotional_state": ["Hopelessness", "Feeling Stuck", "Emotional Exhaustion"],
+  "severity_level": "High",
+  "therapy_framework": ["Trauma-Informed Care", "CBT", "Motivational Interviewing"],
+  "content": "When a user expresses hopelessness, exhaustion with life, or 'what's the point' thinking without active crisis or safety concerns, they need to feel heard in the heaviness before anything else happens.\n\n**Key approach:**\n1. Validate the exhaustion and weight of what they're carrying rather than jumping to reassurance.\n2. Reflect their words back so they know you actually heard the specific thing, not a generic 'I understand'.\n3. Gently stay curious about the feeling without interrogating it — one soft, open question is enough.\n4. Avoid trying to talk them out of the feeling with logic or silver linings.\n5. Watch closely for any language that shifts toward wanting to die, harming themselves, or not wanting to exist — if that appears, shift immediately to the crisis response approach rather than continuing this track.\n6. If hopelessness sounds persistent, longstanding, or is affecting daily functioning, gently mention that talking to a therapist or counselor could help carry some of this weight — offered as an option, not a directive.\n\nHopelessness often softens simply by being witnessed without judgment or urgency to fix it.",
+  "example_response": "That sounds so heavy to carry, especially if it's been sitting with you for a while. I hear you — it makes sense you'd feel done with all of it right now. I'm not going anywhere. Do you want to tell me more about what's been building up to this?",
+  "what_to_avoid": [
+    "Jumping straight to 'things will get better' without acknowledging the pain first",
+    "Offering a list of reasons to be grateful or hopeful",
+    "Treating every mention of hopelessness as an active crisis",
+    "Missing a shift toward crisis language because you're focused on the 'stuck' framing",
+    "Pushing therapy or professional help as the first response before validating"
+  ],
+  "tags": ["high_distress", "hopelessness", "stuck", "exhaustion", "validation"]
+}

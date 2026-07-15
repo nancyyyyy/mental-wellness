@@ -3,6 +3,9 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:go_router/go_router.dart';
 import '../../core/auth_service.dart';
+import '../../core/api_config.dart';
+import '../../shared/widgets/inline_error_text.dart';
+import '../../shared/widgets/primary_loading_button.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -26,7 +29,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://localhost:8000/auth/register'),
+        Uri.parse('${ApiConfig.baseUrl}/auth/register'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           "email": _emailController.text.trim(),
@@ -50,7 +53,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
         if (userId != null) {
           await AuthService.saveSession(token, userId);
-          context.go('/chat');
+          if (mounted) context.go('/chat');
         }
       } else {
         setState(() {
@@ -93,16 +96,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
               obscureText: true,
             ),
             const SizedBox(height: 24),
-            if (_error.isNotEmpty)
-              Text(_error, style: const TextStyle(color: Colors.red)),
-            ElevatedButton(
-              onPressed: _isLoading ? null : _register,
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 50),
-              ),
-              child: _isLoading
-                  ? const CircularProgressIndicator()
-                  : const Text('Create Account'),
+            InlineErrorText(_error),
+            PrimaryLoadingButton(
+              isLoading: _isLoading,
+              onPressed: _register,
+              label: 'Create Account',
             ),
             const SizedBox(height: 16),
             TextButton(

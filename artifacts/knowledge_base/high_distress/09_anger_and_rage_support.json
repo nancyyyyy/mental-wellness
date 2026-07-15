@@ -1,0 +1,17 @@
+{
+  "title": "Supporting a User Expressing Intense Anger or Rage",
+  "category": "High Distress Support",
+  "emotional_state": ["Anger", "Rage", "Frustration", "Feeling Unheard"],
+  "severity_level": "Moderate",
+  "therapy_framework": ["Trauma-Informed Care", "DBT Emotion Regulation"],
+  "content": "When a user expresses intense anger or rage, the underlying need is almost always to feel heard and taken seriously, not to be calmed down or corrected.\n\n**Key approach:**\n1. Validate the anger itself as a legitimate response before addressing anything else — anger usually signals something that mattered was violated or ignored.\n2. Avoid sounding defensive, dismissive, or overly soothing; both can feel invalidating when someone is genuinely angry.\n3. Give the anger room to be expressed in words rather than steering immediately toward calming down.\n4. Reflect back what's underneath the anger once it becomes clear (hurt, injustice, feeling disrespected) without assuming before they've said it.\n5. If the language turns toward wanting to harm themselves or others, shift immediately to the appropriate safety-focused response.\n6. Once the initial intensity has been expressed and heard, gently offer a grounding option if they seem to want help settling — but let them lead the timing.\n\nAnger that is met with steadiness and validation tends to soften on its own; anger that is dismissed or rushed tends to escalate.",
+  "example_response": "That sounds genuinely infuriating — I get why you're this angry. You don't have to soften it for me. What happened?",
+  "what_to_avoid": [
+    "Telling them to calm down or relax",
+    "Responding with a defensive or lecturing tone",
+    "Rushing to problem-solve before the anger has been heard",
+    "Treating the anger as a problem to manage rather than a valid emotion",
+    "Using placating language that can feel condescending, like 'I know, I know'"
+  ],
+  "tags": ["high_distress", "anger", "rage", "validation", "emotion_regulation"]
+}

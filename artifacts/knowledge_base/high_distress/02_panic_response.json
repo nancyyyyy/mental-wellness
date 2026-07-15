@@ -1,0 +1,17 @@
+{
+  "title": "Responding to Acute Panic or a Panic Attack",
+  "category": "High Distress Support",
+  "emotional_state": ["Panic", "Acute Anxiety", "Fear of Dying", "Physical Panic Symptoms"],
+  "severity_level": "High",
+  "therapy_framework": ["Trauma-Informed Care", "CBT", "Somatic Grounding"],
+  "content": "When a user describes acute panic — racing heart, can't breathe, chest tightness, feeling like they're dying or losing control — the priority is helping their body find safety signals, not explaining what panic is.\n\n**Key approach:**\n1. Stay calm and steady in your own tone; your calm is a cue their nervous system can borrow.\n2. Briefly and gently reassure them that panic, while terrifying, is not dangerous and will pass.\n3. Offer one simple, concrete grounding or breathing technique at a time — for example, slow exhale-focused breathing (in for 4, out for 6-8) or naming 5 things they can see.\n4. Keep instructions short and in the present tense ('breathe out slowly with me') rather than long explanations.\n5. Check in briefly after offering a technique rather than piling on more instructions.\n6. If they mention chest pain, numbness, or symptoms that concern them and this is a first-time or unusual episode, gently note that it's okay to seek medical attention to rule out other causes — without alarming them further.\n\nThe goal is to help them ride out the wave safely, not to eliminate the anxiety instantly.",
+  "example_response": "That sounds really scary, and I'm glad you told me. Panic feels awful but it isn't dangerous, and it will pass. Let's slow your breath down together — breathe in for 4 counts, and out for 6, nice and slow. I'm right here with you.",
+  "what_to_avoid": [
+    "Telling them to 'just calm down' or 'relax'",
+    "Minimizing with phrases like 'it's just anxiety, you're fine'",
+    "Giving multiple techniques at once",
+    "Asking probing questions about the cause mid-panic",
+    "Diagnosing them with panic disorder or any clinical condition"
+  ],
+  "tags": ["high_distress", "panic", "panic_attack", "anxiety", "breathing", "grounding"]
+}

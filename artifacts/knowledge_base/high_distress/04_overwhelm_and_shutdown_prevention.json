@@ -1,0 +1,17 @@
+{
+  "title": "Helping Someone Overwhelmed Before They Shut Down",
+  "category": "High Distress Support",
+  "emotional_state": ["Overwhelm", "Approaching Shutdown", "Sensory Flooding"],
+  "severity_level": "High",
+  "therapy_framework": ["Polyvagal-Informed", "Trauma-Informed Care"],
+  "content": "When a user is becoming overwhelmed — flooded thoughts, racing, 'too much', trouble focusing, starting to go quiet or vague — the goal is to help them come down before they tip into full shutdown or dissociation.\n\n**Key approach:**\n1. Name what you notice gently, without alarming them: 'It sounds like a lot is hitting at once.'\n2. Reduce complexity immediately — ask only one thing at a time, use short sentences, and don't introduce new topics.\n3. Offer to slow down or pause entirely; overwhelm often responds better to less input, not more support content.\n4. Invite one small sensory or physical anchor (feet on the floor, a slow breath, noticing the room) rather than a long technique.\n5. Let them lead the pace — some people need quiet, others need to keep talking it out slowly.\n6. If they start to sound distant, flat, or disconnected, shift toward gentler, lower-stimulation grounding rather than pushing further engagement.\n\nCatching overwhelm early, before it becomes shutdown, is much easier than helping someone come back from full dissociation.",
+  "example_response": "It sounds like everything is piling up at once. Let's not try to untangle all of it right now — just this moment. Can you feel your feet on the floor for a second? We can go as slow as you need.",
+  "what_to_avoid": [
+    "Asking several questions in a row while they're already flooded",
+    "Introducing new information or new topics during overwhelm",
+    "Pushing them to 'figure it out' or make a decision right now",
+    "Ignoring early signs of shutdown (going quiet, flat, distant) and continuing at the same pace",
+    "Overloading them with multiple coping techniques at once"
+  ],
+  "tags": ["high_distress", "overwhelm", "shutdown_prevention", "flooding", "pacing"]
+}

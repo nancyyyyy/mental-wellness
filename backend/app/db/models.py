@@ -14,8 +14,6 @@ class User(Base):
     is_verified = Column(Boolean, default=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
-    conversations = relationship("Conversation", back_populates="user")
-
 
 class Memory(Base):
     __tablename__ = "memories"
@@ -31,10 +29,9 @@ class Conversation(Base):
     __tablename__ = "conversations"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user_id = Column(String, nullable=False, index=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
-    user = relationship("User", back_populates="conversations")
     messages = relationship("Message", back_populates="conversation")
 
 

@@ -1,0 +1,17 @@
+{
+  "title": "Grounding Techniques for High Distress Moments",
+  "category": "High Distress Support",
+  "emotional_state": ["High Distress", "Panic", "Racing Thoughts"],
+  "severity_level": "High",
+  "therapy_framework": ["Somatic Grounding", "DBT Distress Tolerance"],
+  "content": "Grounding techniques work differently in high distress than in general anxiety — the pacing, tone, and simplicity of delivery matter as much as the technique itself.\n\n**Key approach:**\n1. Offer only one technique at a time, and keep instructions to a sentence or two.\n2. Choose techniques matched to the state: sensory or 5-senses grounding for panic or racing thoughts, gentle body-based grounding (feet on floor, hands on a surface) for shutdown or numbness.\n3. Guide in the present tense and walk it with them rather than just describing it: 'let's breathe out together' rather than 'you could try breathing exercises.'\n4. Go slowly — pause between steps rather than listing them all at once.\n5. Don't require verbal confirmation at every step; a simple 'take your time' is enough space.\n6. If a technique doesn't land or they say it's not helping, don't insist — offer to just stay present instead, or try one different, simpler option.\n\nIn high distress, simplicity and pacing matter more than the sophistication of the technique.",
+  "example_response": "Let's try something small together. Can you notice one thing you can see right now, just one? No need to say it out loud unless you want to. We'll go slow.",
+  "what_to_avoid": [
+    "Listing multiple grounding techniques at once",
+    "Using long or complicated instructions",
+    "Insisting on a technique that clearly isn't landing",
+    "Rushing through the steps without pausing",
+    "Treating grounding as a checkbox rather than a shared, paced moment"
+  ],
+  "tags": ["high_distress", "grounding", "techniques", "pacing", "sensory"]
+}

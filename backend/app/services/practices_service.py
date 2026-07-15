@@ -1,19 +1,29 @@
+import json
 from typing import List, Dict
+from pydantic import BaseModel
 from ..db.base import get_db
 from ..db.models import Memory
 from ..core.config import settings
-from langchain_groq import ChatGroq
+from ..services.knowledge_service import KnowledgeService
 from langchain_openai import ChatOpenAI
+
+DEFAULT_QUERY = "general calming grounding self-soothing techniques for everyday stress"
+
+
+class PracticeRecommendation(BaseModel):
+    name: str
+    why: str
+    how: str
+    benefit: str
+
+
+class PracticeList(BaseModel):
+    practices: List[PracticeRecommendation]
+
 
 class PracticesService:
     def __init__(self):
-        if settings.LLM_PROVIDER == "groq":
-            self.llm = ChatGroq(
-                groq_api_key=settings.GROQ_API_KEY,
-                model_name=settings.GROQ_MODEL,
-                temperature=0.6,
-            )
-        elif settings.LLM_PROVIDER == "openai":
+        if settings.LLM_PROVIDER == "openai":
             self.llm = ChatOpenAI(
                 openai_api_key=settings.OPENAI_API_KEY,
                 model=settings.OPENAI_MODEL,
@@ -26,92 +36,71 @@ class PracticesService:
                 model=settings.OLLAMA_MODEL,
                 temperature=0.6,
             )
+        self.knowledge_service = KnowledgeService()
 
-    def get_personalized_practices(self, user_id: str, limit: int = 5) -> List[Dict]:
-        """
-        Generate high-quality insights using LLM + memory data.
-        """
+    def _recent_memory_query(self, user_id: str) -> str:
         db = next(get_db())
         try:
             memories = (
                 db.query(Memory)
                 .filter(Memory.user_id == user_id)
                 .order_by(Memory.created_at.desc())
-                .limit(25)
+                .limit(10)
                 .all()
             )
-
             if not memories:
-                return self._get_general_calming_practices()
-
-            memory_text = "\n".join([f"- {m.memory_text} (type: {m.memory_type})" for m in memories])
-
-            prompt = f"""You are an experienced therapist recommending practices.
-
-User's recent memories:
-{memory_text}
-
-Based on the user's emotional state and patterns above, recommend 3-4 most relevant practices from the following categories:
-- Calming / Nervous system regulation
-- Grounding techniques
-- Emotional awareness
-- Self-compassion
-- Anxiety relief
-
-For each practice, return in this exact format:
-
-Name: [Practice Name]
-Why: [1-2 sentences explaining why this is relevant for the user]
-How: [Simple 2-4 step instructions]
-Benefit: [Expected benefit]
-
-Only return the practices in the format above. Do not add extra commentary."""
-
-            response = self.llm.invoke(prompt)
-            raw = response.content
-
-            practices = []
-            blocks = raw.strip().split("\n\n")
-
-            for block in blocks:
-                lines = block.strip().split("\n")
-                data = {}
-                for line in lines:
-                    if line.startswith("Name:"):
-                        data["name"] = line.replace("Name:", "").strip()
-                    elif line.startswith("Why:"):
-                        data["why"] = line.replace("Why:", "").strip()
-                    elif line.startswith("How:"):
-                        data["how"] = line.replace("How:", "").strip()
-                    elif line.startswith("Benefit:"):
-                        data["benefit"] = line.replace("Benefit:", "").strip()
-
-                if "name" in data:
-                    practices.append({
-                        "name": data.get("name", "Practice"),
-                        "why": data.get("why", ""),
-                        "how": data.get("how", ""),
-                        "benefit": data.get("benefit", "")
-                    })
-
-            return practices[:limit]
-
+                return DEFAULT_QUERY
+            return "; ".join(m.memory_text for m in memories)
         finally:
             db.close()
 
-    def _get_general_calming_practices(self) -> List[Dict]:
-        """Fallback general calming practices"""
-        return [
-            {
-                "name": "Box Breathing",
-                "why": "A simple technique to quickly calm the nervous system when feeling anxious or overwhelmed.",
-                "how": "Inhale for 4 seconds → Hold for 4 seconds → Exhale for 4 seconds → Hold for 4 seconds. Repeat 4 times.",
-                "benefit": "Reduces immediate anxiety and helps regain a sense of control."
-            },
-            {
-                "name": "5-4-3-2-1 Grounding",
-                "why": "Helps bring attention back to the present moment when the mind feels scattered or anxious.",
-                "how": "Name 5 things you can see, 4 things you can touch, 3 things you can hear, 2 things you can smell, and 1 thing you can taste.",
-                "benefit": "Quickly reduces racing thoughts and increases present-moment awareness."
-            }
-        ]
+    def get_personalized_practices(self, user_id: str, limit: int = 5) -> List[Dict]:
+        query = self._recent_memory_query(user_id)
+        retrieved = self.knowledge_service.retrieve(
+            query=query, doc_type="technique", limit=max(limit, 5)
+        )
+
+        if not retrieved:
+            return []
+
+        kb_context = "\n\n".join(
+            f"**{item.get('title', '')}**\n"
+            f"{item.get('body', '')}\n"
+            f"Steps: {' | '.join(item.get('guidance', [])[:6])}"
+            for item in retrieved
+        )
+
+        prompt = f"""You are an experienced, warm companion recommending self-help practices.
+
+Knowledge base entries retrieved as relevant to this user right now:
+{kb_context}
+
+Based only on the material above, select and adapt {min(limit, len(retrieved))} of the most relevant practices for this user.
+For each, write:
+- name: the practice's name
+- why: 1-2 sentences on why it's relevant right now
+- how: simple 2-4 step instructions, adapted from the knowledge base guidance
+- benefit: the expected benefit
+
+Ground everything in the retrieved material above. Do not invent techniques that aren't represented there."""
+
+        practices = self._generate_structured(prompt)
+        return [p.model_dump() for p in practices[:limit]]
+
+    def _generate_structured(self, prompt: str) -> List[PracticeRecommendation]:
+        if settings.LLM_PROVIDER == "openai":
+            structured_llm = self.llm.with_structured_output(PracticeList)
+            result: PracticeList = structured_llm.invoke(prompt)
+            return result.practices
+
+        # Ollama fallback: no reliable structured-output/function-calling support
+        raw = self.llm.invoke(
+            prompt + "\n\nRespond with ONLY a JSON object: "
+            '{"practices": [{"name": "...", "why": "...", "how": "...", "benefit": "..."}]}'
+        ).content
+        raw = raw.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+        try:
+            data = json.loads(raw)
+            return PracticeList.model_validate(data).practices
+        except Exception:
+            return []

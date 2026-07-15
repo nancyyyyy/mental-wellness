@@ -1,0 +1,18 @@
+{
+  "title": "Anti-Patterns: What to Avoid When Someone Is Distressed",
+  "category": "High Distress Support",
+  "emotional_state": ["High Distress", "General Distress"],
+  "severity_level": "High",
+  "therapy_framework": ["Trauma-Informed Care"],
+  "content": "Across all forms of high distress, certain response patterns consistently make things worse even when well-intentioned. This is a general reference of anti-patterns to avoid regardless of which specific distress this is.\n\n**Common mistakes:**\n1. **Toxic positivity** — 'everything happens for a reason', 'just stay positive', 'it could be worse'. This tells the user their pain is unwelcome.\n2. **Rushing to solutions** — offering advice or fixes before the feeling has been acknowledged. Most distress needs to be heard before it can be worked with.\n3. **Minimizing** — 'it's not that bad', 'at least...', comparing their pain to others'. This shuts down honesty.\n4. **Over-questioning** — firing off multiple questions in a row when someone is already flooded or overwhelmed.\n5. **Clinical distancing** — using diagnostic or jargon-heavy language ('that sounds like a panic disorder symptom') that makes the user feel analyzed rather than accompanied.\n6. **False reassurance** — promising outcomes you can't guarantee, like 'everything will be fine', instead of grounding reassurance in presence and safety.\n7. **Matching or escalating intensity** — mirroring panic, rage, or despair back at the same pitch instead of staying steady.\n8. **Abandoning presence too early** — moving on or wrapping up the conversation before the person feels steadier.\n9. **Overloading with techniques** — listing several coping strategies at once instead of offering one at a time.\n10. **Performing calm instead of being steady** — language that sounds scripted or overly therapist-like rather than warm and human.\n\n**General principle:** when in doubt, slow down, validate first, and offer less rather than more.",
+  "example_response": "I hear how hard this is right now. We don't need to solve anything this second — I just want to make sure you feel heard first. I'm here.",
+  "what_to_avoid": [
+    "Using toxic positivity or silver-lining language",
+    "Jumping to advice before validating the feeling",
+    "Minimizing or comparing their pain to others'",
+    "Asking rapid-fire questions during flooding or panic",
+    "Using clinical or diagnostic labels",
+    "Promising outcomes that can't be guaranteed"
+  ],
+  "tags": ["high_distress", "quick_reference", "anti_patterns", "guidelines", "what_to_avoid"]
+}

@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
+import '../../core/api_config.dart';
+import '../../shared/models/chat_message.dart';
+import '../../shared/widgets/message_bubble.dart';
 
 class VoiceChatScreen extends StatefulWidget {
   const VoiceChatScreen({super.key});
@@ -20,6 +24,7 @@ class _VoiceChatScreenState extends State<VoiceChatScreen> {
   bool _isListening = false;
   bool _isSpeaking = false;
   bool _isProcessing = false;
+  bool _micPermissionDenied = false;
 
   String _lastWords = '';
   String _aiResponse = '';
@@ -52,7 +57,16 @@ class _VoiceChatScreenState extends State<VoiceChatScreen> {
   }
 
   Future<void> _startCall() async {
+    final status = await Permission.microphone.request();
+    if (!status.isGranted) {
+      setState(() {
+        _micPermissionDenied = true;
+      });
+      return;
+    }
+
     setState(() {
+      _micPermissionDenied = false;
       _isCallActive = true;
       _statusText = 'Listening...';
       _lastWords = '';
@@ -132,7 +146,7 @@ class _VoiceChatScreenState extends State<VoiceChatScreen> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://localhost:8000/chat/message'),
+        Uri.parse('${ApiConfig.baseUrl}/chat/message'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           "content": text,
@@ -143,7 +157,7 @@ class _VoiceChatScreenState extends State<VoiceChatScreen> {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final aiText = data['response'] ?? "I'm here with you.";
-        
+
         setState(() {
           _aiResponse = aiText;
           _isProcessing = false;
@@ -179,108 +193,135 @@ class _VoiceChatScreenState extends State<VoiceChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Voice Call'),
-        backgroundColor: Colors.teal,
         actions: [
           if (_isCallActive)
             TextButton(
               onPressed: _endCall,
-              child: const Text('End Call', style: TextStyle(color: Colors.white)),
+              child: Text('End Call', style: TextStyle(color: scheme.error)),
             ),
         ],
       ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Status
-              Text(
-                _statusText,
-                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
-              ),
-              const SizedBox(height: 40),
+          child: _micPermissionDenied
+              ? _buildPermissionDenied(context)
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // Status
+                    Text(_statusText, style: textTheme.headlineSmall),
+                    const SizedBox(height: 40),
 
-              // Visual indicator
-              Container(
-                width: 160,
-                height: 160,
-                decoration: BoxDecoration(
-                  color: _isListening
-                      ? Colors.red.shade100
-                      : _isSpeaking
-                          ? Colors.teal.shade100
-                          : Colors.grey.shade200,
-                  shape: BoxShape.circle,
+                    // Visual indicator
+                    Container(
+                      width: 160,
+                      height: 160,
+                      decoration: BoxDecoration(
+                        color: _isListening
+                            ? scheme.errorContainer
+                            : _isSpeaking
+                                ? scheme.secondaryContainer
+                                : scheme.surfaceContainerHighest,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        _isListening
+                            ? Icons.mic
+                            : _isSpeaking
+                                ? Icons.volume_up
+                                : Icons.mic_none,
+                        size: 80,
+                        color: _isListening
+                            ? scheme.error
+                            : _isSpeaking
+                                ? scheme.onSecondaryContainer
+                                : scheme.onSurfaceVariant,
+                      ),
+                    ),
+
+                    const SizedBox(height: 30),
+
+                    if (_lastWords.isNotEmpty)
+                      MessageBubble(
+                        message: ChatMessage(
+                          role: ChatRole.user,
+                          content: _lastWords,
+                        ),
+                      ),
+
+                    if (_aiResponse.isNotEmpty)
+                      MessageBubble(
+                        message: ChatMessage(
+                          role: ChatRole.companion,
+                          content: _aiResponse,
+                        ),
+                      ),
+
+                    const Spacer(),
+
+                    // Start / End Call Button
+                    if (!_isCallActive)
+                      ElevatedButton.icon(
+                        onPressed: _startCall,
+                        icon: const Icon(Icons.call),
+                        label: const Text('Start Voice Call'),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 40, vertical: 16),
+                          textStyle: const TextStyle(fontSize: 18),
+                        ),
+                      )
+                    else
+                      Text(
+                        _isListening
+                            ? "Listening... (Speak naturally)"
+                            : _isSpeaking
+                                ? "Speaking..."
+                                : "Processing...",
+                        style: textTheme.bodyMedium
+                            ?.copyWith(color: scheme.onSurfaceVariant),
+                      ),
+
+                    const SizedBox(height: 40),
+                  ],
                 ),
-                child: Icon(
-                  _isListening
-                      ? Icons.mic
-                      : _isSpeaking
-                          ? Icons.volume_up
-                          : Icons.mic_none,
-                  size: 80,
-                  color: _isListening
-                      ? Colors.red
-                      : _isSpeaking
-                          ? Colors.teal
-                      : Colors.grey,
-                ),
-              ),
-
-              const SizedBox(height: 30),
-
-              // Last spoken text
-              if (_lastWords.isNotEmpty)
-                Text(
-                  "You: $_lastWords",
-                  style: const TextStyle(fontSize: 16, color: Colors.black87),
-                  textAlign: TextAlign.center,
-                ),
-
-              const SizedBox(height: 16),
-
-              // AI Response
-              if (_aiResponse.isNotEmpty)
-                Text(
-                  "Companion: $_aiResponse",
-                  style: const TextStyle(fontSize: 16, color: Colors.teal),
-                  textAlign: TextAlign.center,
-                ),
-
-              const Spacer(),
-
-              // Start / End Call Button
-              if (!_isCallActive)
-                ElevatedButton.icon(
-                  onPressed: _startCall,
-                  icon: const Icon(Icons.call),
-                  label: const Text('Start Voice Call'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.teal,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-                    textStyle: const TextStyle(fontSize: 18),
-                  ),
-                )
-              else
-                Text(
-                  _isListening
-                      ? "Listening... (Speak naturally)"
-                      : _isSpeaking
-                          ? "Speaking..."
-                          : "Processing...",
-                  style: const TextStyle(fontSize: 16, color: Colors.grey),
-                ),
-
-              const SizedBox(height: 40),
-            ],
-          ),
         ),
       ),
+    );
+  }
+
+  Widget _buildPermissionDenied(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(Icons.mic_off, size: 64, color: scheme.error),
+        const SizedBox(height: 20),
+        Text(
+          'Microphone access is off',
+          style: textTheme.headlineSmall,
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'Voice calls need microphone access. Enable it in your device settings to continue.',
+          style: textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 24),
+        const ElevatedButton(
+          onPressed: openAppSettings,
+          child: Text('Open Settings'),
+        ),
+      ],
     );
   }
 }

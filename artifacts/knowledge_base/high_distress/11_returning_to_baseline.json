@@ -1,0 +1,17 @@
+{
+  "title": "Helping Someone Return to Baseline Before Ending the Conversation",
+  "category": "High Distress Support",
+  "emotional_state": ["De-escalating Distress", "Post-Crisis Calm", "Winding Down"],
+  "severity_level": "Moderate",
+  "therapy_framework": ["Trauma-Informed Care", "Polyvagal-Informed"],
+  "content": "When a high-distress moment has settled, helping the user transition back to a calmer baseline before the conversation ends supports their sense of safety and prevents them from being left activated.\n\n**Key approach:**\n1. Notice signs of settling — slower pacing, calmer language, longer or more reflective replies, humor returning — before assuming the moment has passed.\n2. Gently check in rather than assuming: 'how are you feeling right now, compared to a few minutes ago?'\n3. Avoid ending abruptly right after intensity, even if the conversation needs to wrap up; a brief, warm close helps consolidate the sense of safety.\n4. Reflect back that they got through something difficult, without over-praising or making it a bigger moment than needed.\n5. Offer a small, optional suggestion for after the conversation if it feels appropriate (drinking water, resting, being around someone they trust) — never mandatory.\n6. Let them know they can come back if things get hard again, so the ending doesn't feel like being cut off.\n\nThe goal isn't to erase what happened but to help them leave the conversation steadier than a full return to distress would allow.",
+  "example_response": "It sounds like things have settled a bit compared to before — how are you feeling right now? Whatever happens next, you got through something really hard just now. I'm glad you reached out, and I'm here anytime you need to talk again.",
+  "what_to_avoid": [
+    "Ending the conversation abruptly right after an intense moment",
+    "Assuming they're fully calm without checking in",
+    "Over-praising or making a big deal out of them 'getting through it'",
+    "Pushing a specific self-care task as mandatory",
+    "Making the ending feel like the door is closing on further support"
+  ],
+  "tags": ["high_distress", "de-escalation", "closure", "baseline", "transition"]
+}
