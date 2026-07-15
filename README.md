@@ -1,6 +1,6 @@
 # Mind Companion
 
-**An AI companion that actually listens — and knows when to say "please talk to someone."**
+**An RAG based - AI companion that actually listens — and knows when to say "please talk to someone."**
 
 Mind Companion pairs a warm, conversational AI with a grounded knowledge base of real therapeutic techniques (CBT, DBT, ACT) and a safety-first pipeline that recognizes emotional distress and routes crisis-level conversations differently from everyday check-ins. Built as a full product: Flutter mobile app, FastAPI backend, and a retrieval-augmented conversation engine — not a thin wrapper around a chatbot API.
 
