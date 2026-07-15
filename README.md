@@ -1,4 +1,4 @@
-# Mind Companion
+# Mind Companion - https://spontaneous-raindrop-74346f.netlify.app/
 
 **An RAG based - AI companion that actually listens — and knows when to say "please talk to someone."**
 
