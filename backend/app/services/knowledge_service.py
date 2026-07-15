@@ -28,7 +28,8 @@ class KnowledgeService:
     def qdrant(self) -> QdrantClient:
         if self._qdrant is None:
             url = os.getenv("QDRANT_URL", "http://localhost:6333")
-            self._qdrant = QdrantClient(url=url)
+            api_key = os.getenv("QDRANT_API_KEY")
+            self._qdrant = QdrantClient(url=url, api_key=api_key)
         return self._qdrant
 
     @property
