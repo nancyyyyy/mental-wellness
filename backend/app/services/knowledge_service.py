@@ -55,6 +55,17 @@ class KnowledgeService:
                     distance=qmodels.Distance.COSINE,
                 ),
             )
+        # Create payload indexes for filtered search
+        self.qdrant.create_payload_index(
+            collection_name=COLLECTION_NAME,
+            field_name="doc_type",
+            field_schema=qmodels.PayloadSchemaType.KEYWORD,
+        )
+        self.qdrant.create_payload_index(
+            collection_name=COLLECTION_NAME,
+            field_name="category",
+            field_schema=qmodels.PayloadSchemaType.KEYWORD,
+        )
 
     def retrieve(
         self,
